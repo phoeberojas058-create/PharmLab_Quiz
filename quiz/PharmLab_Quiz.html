@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PharmLab Quiz — Corrected</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(135deg,#eef5ff,#f8f3ff);color:#172033;min-height:100vh}
+button{font:inherit;cursor:pointer}
+.app{max-width:1100px;margin:auto;padding:28px 18px 55px}
+header{text-align:center;margin:10px 0 30px}.logo{font-size:44px}.title{font-size:42px;font-weight:800;margin:6px}.subtitle{color:#667085;font-size:17px}
+.screen{display:none}.screen.active{display:block}
+.card{background:white;border:1px solid #e6eaf0;border-radius:24px;padding:28px;box-shadow:0 12px 35px rgba(31,41,55,.08)}
+h2{margin-top:0;font-size:28px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
+.topic,.quiztype{padding:24px;border:2px solid #e7eaf0;background:#fff;border-radius:20px;text-align:left;transition:.2s}
+.topic:hover,.quiztype:hover{transform:translateY(-3px);border-color:#667eea;box-shadow:0 8px 20px rgba(102,126,234,.13)}
+.icon{font-size:42px}.topic h3,.quiztype h3{margin:10px 0 6px;font-size:21px}.topic p,.quiztype p{color:#667085;line-height:1.5}
+.primary{background:#5967d9;color:#fff;border:0;border-radius:12px;padding:12px 18px;font-weight:700}
+.secondary{background:#f0f2f7;color:#27304a;border:0;border-radius:12px;padding:11px 16px;font-weight:700}
+.topbar{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:16px}.crumb{color:#667085}
+.progress{height:9px;background:#e9edf5;border-radius:99px;overflow:hidden;margin:15px 0 25px}.progress>div{height:100%;background:#5967d9;transition:.3s}
+.qbox{text-align:center}.qbox h2{font-size:25px;line-height:1.4}
+.quizimg{width:min(650px,100%);height:420px;object-fit:contain;border-radius:16px;border:1px solid #e2e6ed;background:#f8fafc;margin:8px auto 22px;display:block}
+.missing{width:min(650px,100%);height:420px;margin:8px auto 22px;border:2px dashed #cbd2df;border-radius:16px;background:#f8fafc;display:flex;align-items:center;justify-content:center;color:#667085;padding:30px;text-align:center}
+.answers{display:grid;grid-template-columns:1fr 1fr;gap:12px}.identification-input{width:100%;padding:15px;border:2px solid #e3e7ef;border-radius:13px;font:inherit;font-weight:650;outline:none}.identification-input:focus{border-color:#5967d9}.answer{background:#fff;border:2px solid #e3e7ef;padding:15px;border-radius:13px;text-align:left;font-weight:650}
+.answer:hover{border-color:#5967d9;background:#f7f8ff}.answer.correct{border-color:#2e9d63;background:#e9f8f0}.answer.wrong{border-color:#d64b4b;background:#fff0f0}
+.feedback{text-align:center;font-weight:700;min-height:25px;margin:15px}.identification-input{width:min(650px,100%);padding:15px;border:2px solid #e3e7ef;border-radius:13px;font:inherit;font-weight:650;outline:none;margin:12px auto;display:block}.identification-input:focus{border-color:#5967d9}
+.explanation{display:none;text-align:left;background:#f5f7ff;border-left:5px solid #5967d9;border-radius:12px;padding:17px;margin:18px 0;line-height:1.6}
+.explanation.show{display:block}.explanation b{font-size:18px}
+.result{text-align:center}.score{font-size:58px;font-weight:850;margin:10px}.small{color:#667085}.hidden{display:none}
+.setup-note{background:#fff8e7;border:1px solid #f0d58a;border-radius:12px;padding:14px;margin-bottom:18px;line-height:1.5}
+code{background:#eef1f7;padding:2px 6px;border-radius:5px}
+.apparatus-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;margin-top:20px}.apparatus-card{position:relative;height:170px;border:2px solid #e7eaf0;border-radius:18px;background:#fff;overflow:hidden;transition:.2s;cursor:pointer}.apparatus-card img{width:100%;height:100%;object-fit:contain;padding:12px;display:block;transition:.25s}.apparatus-card .apparatus-info{position:absolute;left:8px;right:8px;bottom:8px;background:rgba(255,255,255,.96);border-radius:12px;padding:9px 10px;opacity:0;transform:translateY(8px);transition:.2s;box-shadow:0 5px 16px rgba(31,41,55,.12)}.apparatus-card .apparatus-name{font-weight:800;font-size:15px;margin-bottom:3px}.apparatus-card .apparatus-function{font-size:12px;color:#667085;line-height:1.35}.apparatus-card:hover{transform:scale(1.035);border-color:#5967d9;box-shadow:0 10px 24px rgba(31,41,55,.12);z-index:2}.apparatus-card:hover img{transform:scale(1.12)}.apparatus-card:hover .apparatus-info{opacity:1;transform:translateY(0)}.apparatus-missing{display:flex;align-items:center;justify-content:center;height:100%;padding:12px;text-align:center;color:#667085;font-size:12px}@media(max-width:650px){.apparatus-grid{grid-template-columns:repeat(2,minmax(130px,1fr))}.apparatus-card{height:155px}}
+.apparatus-modal{display:none;position:fixed;inset:0;background:rgba(23,32,51,.72);z-index:1000;align-items:center;justify-content:center;padding:24px}.apparatus-modal.show{display:flex}.apparatus-modal-content{position:relative;background:#fff;border-radius:22px;padding:22px;max-width:760px;width:min(760px,100%);max-height:90vh;overflow:auto;box-shadow:0 18px 50px rgba(0,0,0,.25);text-align:center}.apparatus-modal-content img{max-width:100%;max-height:62vh;object-fit:contain;border-radius:16px;background:#f8fafc;border:1px solid #e2e6ed;padding:10px}.apparatus-modal-name{font-size:24px;font-weight:800;margin:14px 0 7px}.apparatus-modal-function{color:#667085;line-height:1.55}.apparatus-modal-close{position:absolute;right:14px;top:12px;width:38px;height:38px;border:0;border-radius:50%;background:#f0f2f7;color:#27304a;font-size:24px;line-height:1}.apparatus-card:focus-visible{outline:3px solid #5967d9;outline-offset:3px}
+.element-info{background:#f5f7ff;border-left:5px solid #5967d9;border-radius:12px;padding:16px;margin:15px 0 20px;line-height:1.5;min-height:70px}.periodic-grid{display:grid;grid-template-columns:repeat(18,minmax(34px,1fr));gap:5px;overflow:auto;padding-bottom:8px}.el{border:1px solid #d9deea;border-radius:8px;padding:7px 3px;background:#fff;text-align:center;min-height:62px;transition:.15s}.el:hover{transform:translateY(-2px);border-color:#5967d9;background:#f7f8ff}.el .z{font-size:10px;color:#667085}.el .sym{font-size:18px;font-weight:800}.el .name{font-size:9px;color:#667085;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.spacer{min-height:1px}@media(max-width:800px){.periodic-grid{grid-template-columns:repeat(18,45px)}}
+@media(max-width:650px){.answers{grid-template-columns:1fr}.title{font-size:32px}.card{padding:20px}.quizimg,.missing{height:300px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div class="logo">🧪</div><div class="title">PharmLab Quiz</div><div class="subtitle">Laboratory Apparatus & Periodic Table Review</div></header>
+
+<section id="home" class="screen active">
+<div class="card">
+<h2>Choose a topic</h2>
+<div class="grid">
+<button class="topic" onclick="chooseTopic('lab')"><div class="icon">🔬</div><h3>Lab Apparatus</h3><p>Identify laboratory equipment using your own pictures.</p></button>
+<button class="topic" onclick="chooseTopic('periodic')"><div class="icon">⚛️</div><h3>Periodic Table</h3><p>Review periods, groups, trends, history, and elements from your lecture.</p></button>
+</div>
+</div>
+</section>
+
+<section id="types" class="screen">
+<div class="card">
+<div class="topbar"><span class="crumb" id="topicCrumb"></span><button class="secondary" onclick="goHome()">← Topics</button></div>
+<h2>Choose your quiz type</h2>
+<div class="grid">
+<button class="quiztype" onclick="showIdentificationLevels()"><div class="icon">✍️</div><h3>Identification</h3><p>Choose Easy for choices or Hard to type the answer with no choices.</p></button>
+<button id="functionQuizBtn" class="quiztype" onclick="startQuiz(1)"><div class="icon">🧠</div><h3>Identify by Function</h3><p>Use apparatus functions plus Pages 46–50 measurement/property applications, then see the answer and explanation.</p></button>
+<button id="mixedQuizBtn" class="quiztype" onclick="startQuiz(2)"><div class="icon">🎯</div><h3>Mixed Challenge</h3><p>Randomized challenge combining apparatus pictures, functions, and Pages 46–50: matter, properties, accuracy/precision, and measurement.</p></button>
+<button id="periodicExplorerBtn" class="quiztype" onclick="openPeriodicTable()" style="display:none"><div class="icon">⚛️</div><h3>Explore Periodic Table</h3><p>Explore the interactive periodic table and view basic element information.</p></button>
+<button id="apparatusExplorerBtn" class="quiztype" onclick="openApparatusExplorer()" style="display:none"><div class="icon">🔬</div><h3>Explore Lab Apparatus</h3><p>Browse the laboratory apparatus pictures and hover over them to see their names and explanations.</p></button>
+</div>
+</div>
+</section>
+
+<section id="identificationLevels" class="screen">
+<div class="card">
+<div class="topbar"><span class="crumb" id="identificationCrumb"></span><button class="secondary" onclick="show('types')">← Quiz Types</button></div>
+<h2>Identification</h2>
+<div class="grid">
+<button class="quiztype" onclick="startIdentification('easy')"><div class="icon">😊</div><h3>Easy</h3><p>Choose the correct answer from the choices. For Periodic Table, this uses the lecture question bank.</p></button>
+<button class="quiztype" onclick="startIdentification('hard')"><div class="icon">🔥</div><h3>Hard</h3><p>Type the answer with no choices. Capitalization does not matter.</p></button>
+</div>
+</div>
+</section>
+
+<section id="apparatusExplorer" class="screen">
+<div class="card">
+<div class="topbar"><span class="crumb">🔬 Lab Apparatus Explorer</span><button class="secondary" onclick="show('types')">← Quiz Types</button></div>
+<h2>Explore Laboratory Apparatus</h2>
+<p class="small">Hover over an apparatus to enlarge its picture and view its name and explanation.</p>
+<div id="apparatusGrid" class="apparatus-grid"></div>
+</div>
+</section>
+
+<section id="periodicExplorer" class="screen">
+<div class="card">
+<div class="topbar"><span class="crumb">⚛️ Periodic Table Explorer</span><button class="secondary" onclick="show('types')">← Quiz Types</button></div>
+<h2>Interactive Periodic Table</h2>
+<p class="small">Click an element to view its basic information. The arrangement follows periods (rows) and groups (columns), as described in the lecture.</p>
+<div id="elementInfo" class="element-info">Select an element.</div>
+<div id="periodicGrid" class="periodic-grid"></div><p class="small" style="margin-top:12px">Rows 8–9 are the separated lanthanide and actinide series.</p>
+</div>
+</section>
+
+<div id="apparatusModal" class="apparatus-modal" role="dialog" aria-modal="true" aria-labelledby="apparatusModalName" onclick="if(event.target===this) closeApparatusModal()"><div class="apparatus-modal-content"><button class="apparatus-modal-close" aria-label="Close" onclick="closeApparatusModal()">×</button><img id="apparatusModalImg" alt=""><div id="apparatusModalName" class="apparatus-modal-name"></div><div id="apparatusModalFunction" class="apparatus-modal-function"></div></div></div>
+
+<section id="quiz" class="screen">
+<div class="card">
+<div class="topbar"><span class="crumb" id="quizTitle"></span><span id="counter"></span></div>
+<div class="progress"><div id="progressBar"></div></div>
+<div class="qbox">
+<div id="question"></div>
+<div id="imageWrap"></div>
+<div class="answers" id="answers"></div>
+<div class="feedback" id="feedback"></div>
+<div id="explanation" class="explanation"></div>
+<button class="primary hidden" id="nextBtn" onclick="nextQuestion()">Next Question →</button>
+</div>
+</div>
+</section>
+
+<section id="result" class="screen">
+<div class="card result">
+<div class="logo">🏆</div><h2>Quiz Complete!</h2><div class="score" id="score"></div>
+<p class="small" id="resultText"></p>
+<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:22px">
+<button class="primary" onclick="restart()">Try Again</button>
+<button class="secondary" onclick="show('types')">Choose Quiz Type</button>
+<button class="secondary" onclick="goHome()">Choose Topic</button>
+</div>
+</div>
+</section>
+</div>
+
+<script>
+const apparatus = [{"name": "Beaker", "function": "mix chemicals, dissolve solids into solutions, heat or cool solutions, and estimate liquid volume"}, {"name": "Erlenmeyer Flask", "function": "mix, dissolve solids into solutions, heat or cool solutions, and swirl solutions with minimum loss"}, {"name": "Graduated Cylinder", "function": "more accurately measure volumes of liquids in milliliters (mL)"}, {"name": "Volumetric Flask", "function": "accurately prepare solutions to a specified fill line"}, {"name": "Pipet (Pipette)", "function": "measure or transfer liquids"}, {"name": "Micropipet (Micropipette)", "function": "precisely transfer small volumes of liquids"}, {"name": "Dropper", "function": "draw in a liquid and expel it in drops"}, {"name": "Buret (Burette)", "function": "accurately measure volumes of reagents and dispense solution during titration"}, {"name": "Ring Stand", "function": "support laboratory apparatus using rings and clamps"}, {"name": "Double Buret Clamp", "function": "hold up to two burets on a ring stand"}, {"name": "Support Ring", "function": "stabilize flasks, beakers, and other glassware over the work area"}, {"name": "Test Tube Clamp", "function": "hold test tubes and other cylindrical laboratory equipment"}, {"name": "Test Tube Rack", "function": "hold test tubes upright or upside down to dry"}, {"name": "Test Tube", "function": "mix, heat, and store small quantities of chemicals"}, {"name": "Test Tube Brush", "function": "clean test tubes and narrow-mouth laboratory glassware"}, {"name": "Funnel", "function": "pour liquids into narrow-mouth containers"}, {"name": "Mortar And Pestle", "function": "crush and grind substances into a fine paste or powder"}, {"name": "Crucible And Cover", "function": "heat solid chemicals at high temperatures; the cover contains smoke particles"}, {"name": "Clay Triangle", "function": "hold a crucible while it is being heated"}, {"name": "Watch Glass", "function": "cover beakers, evaporate water, weigh solid chemicals, or observe samples"}, {"name": "Evaporating Dish", "function": "separate water and solids from a solution by evaporation"}, {"name": "Bunsen Burner", "function": "provide heat for experiments"}, {"name": "Hot Plate", "function": "heat glassware or its contents; some can stir liquids automatically"}, {"name": "Hot Mitt", "function": "grip and transfer hot glassware"}, {"name": "Wire Gauze", "function": "diffuse heat and support glassware during heating"}, {"name": "Test Tube Holder", "function": "hold and transport hot test tubes"}, {"name": "Crucible Tongs", "function": "hold and transport hot crucibles"}, {"name": "Beaker Tongs", "function": "hold and transport hot beakers"}, {"name": "Weigh Boat", "function": "hold samples for weighing"}, {"name": "Scoopula (Metal Scoop)", "function": "transfer solids from one place to another"}, {"name": "Top-Loading Balance", "function": "measure the mass of substances accurately"}, {"name": "Analytical Balance", "function": "measure mass more precisely than a top-loading balance"}, {"name": "Well Plate", "function": "provide multiple small wells used like small test tubes"}, {"name": "Forceps", "function": "grasp and hold small objects"}, {"name": "Thermometer", "function": "measure temperature in degrees Celsius or Fahrenheit"}, {"name": "Ruler", "function": "measure distance or length"}, {"name": "Stirring Rod", "function": "stir mixtures and facilitate pouring of liquids"}, {"name": "Wash Bottle", "function": "store and dispense distilled or deionized water"}, {"name": "Goggles", "function": "protect the eyes when handling chemicals or glass"}, {"name": "Apron", "function": "protect clothing from chemical spills"}, {"name": "Three-Prong Clamp", "function": "secure lab equipment to a ring stand"}, {"name": "Graduated Pipet", "function": "transfer a precise volume of liquid"}, {"name": "Thin Stem Pipet", "function": "transfer small amounts of liquid, usually one drop at a time"}, {"name": "Stopwatch", "function": "time how long something takes to complete"}, {"name": "Centrifuge", "function": "separate fluids of different densities or liquids from solids"}, {"name": "Petri Dish", "function": "hold specimens for observation and grow cultures"}, {"name": "Triangular File", "function": "score glass tubing to create clean breaks"}];
+const labReview = [{"q": "Which statement best defines matter?", "a": ["Anything that has mass and takes up space (volume)", "Anything that has color", "Anything that can dissolve in water", "Anything that can be seen"], "correct": 0, "explanation": "Page 46: Matter is anything that has mass and takes up space (volume)."}, {"q": "What is density?", "a": ["The amount of matter in a given volume", "The temperature of a substance", "The ability of a substance to react", "The distance an object travels"], "correct": 0, "explanation": "Page 46: Density is the amount of matter in a given volume."}, {"q": "Which equation from the review gives density?", "a": ["Density = Mass / Volume", "Density = Volume / Mass", "Density = Mass × Volume", "Density = Mass + Volume"], "correct": 0, "explanation": "Page 46: Density = Mass / Volume, with units such as g/mL or g/cm³."}, {"q": "Which type of mixture is the same throughout and is described as a solution?", "a": ["Homogeneous mixture", "Heterogeneous mixture", "Element", "Compound"], "correct": 0, "explanation": "Page 46: Homogeneous mixtures are the same throughout; solutions are examples."}, {"q": "Which type of mixture is different throughout?", "a": ["Heterogeneous mixture", "Homogeneous mixture", "Element", "Compound"], "correct": 0, "explanation": "Page 46: Heterogeneous mixtures are different throughout."}, {"q": "Which is a pure substance made of only one type of atom?", "a": ["Element", "Compound", "Homogeneous mixture", "Heterogeneous mixture"], "correct": 0, "explanation": "Page 46: Elements are pure substances made of only one type of atom."}, {"q": "Which is a pure substance made of two or more elements chemically combined?", "a": ["Compound", "Element", "Homogeneous mixture", "Heterogeneous mixture"], "correct": 0, "explanation": "Page 46: Compounds are made of two or more elements chemically combined."}, {"q": "Which is a physical property because it can be observed or measured without changing the composition of matter?", "a": ["Density", "Flammability", "Reactivity with other chemicals", "Ability to rust"], "correct": 0, "explanation": "Page 47: Physical properties can be observed or measured without changing composition; density is an example."}, {"q": "Which of the following is listed as a physical property?", "a": ["Solubility", "Toxicity", "Flammability", "Chemical stability"], "correct": 0, "explanation": "Page 47 lists solubility as a physical property."}, {"q": "Which of the following is also a physical property listed in the review?", "a": ["Melting point", "Ability to rust", "Flammability", "Reactivity with other chemicals"], "correct": 0, "explanation": "Page 47 lists melting and boiling points as physical properties."}, {"q": "A property that can only be observed or measured by performing a chemical change or reaction is a:", "a": ["Chemical property", "Physical property", "Measurement unit", "Mixture"], "correct": 0, "explanation": "Page 48: Chemical properties require a chemical change or chemical reaction to become apparent."}, {"q": "Which is an example of a chemical property from the review?", "a": ["Flammability", "Color", "Texture", "Appearance"], "correct": 0, "explanation": "Page 48 lists flammability as a chemical property."}, {"q": "Which property describes how a substance reacts with other chemicals?", "a": ["Reactivity", "Density", "Texture", "Solubility"], "correct": 0, "explanation": "Page 48 lists reactivity with other chemicals as a chemical property."}, {"q": "Which statement about chemical properties is correct?", "a": ["The sample's structure must be altered for the chemical property to become apparent.", "They can always be determined just by viewing a sample.", "They never involve a chemical reaction.", "They are the same as physical properties."], "correct": 0, "explanation": "Page 48: Chemical properties cannot be determined simply by touching or viewing; the sample's structure must be altered."}, {"q": "Accuracy means:", "a": ["Coming close to a true or desired value", "Having measurements close to each other regardless of the true value", "Recording more decimal places", "Using a larger measuring device"], "correct": 0, "explanation": "Page 49: Accuracy is coming close to a true or desired value."}, {"q": "Precision describes:", "a": ["How well a series of measurements agree with each other", "How close a measurement is to the true value only", "How quickly a measurement is taken", "How large the measuring instrument is"], "correct": 0, "explanation": "Page 49: Precision reflects how well a series of measurements agree with each other."}, {"q": "What can often be adjusted through calibration to yield values that are both accurate and precise?", "a": ["Precision", "Color", "Density", "Volume"], "correct": 0, "explanation": "Page 49: Precision can often be adjusted using calibration to yield values that are both accurate and precise."}, {"q": "Percent error expresses:", "a": ["How far a measured value is from the true value", "How many measurements were taken", "How much mass a sample has", "How many units are in a meter"], "correct": 0, "explanation": "Page 49: Percent error expresses how far a measured value is from the true value."}, {"q": "Which laboratory apparatus is used to measure distance or length?", "a": ["Ruler", "Balance", "Thermometer", "Centrifuge"], "correct": 0, "explanation": "Page 50: A ruler is used to measure distance/length."}, {"q": "Which conversion is given in the measurement review?", "a": ["1 m = 100 cm = 1000 mm", "1 m = 10 cm = 100 mm", "1 km = 100 m", "1 in = 2.54 m"], "correct": 0, "explanation": "Page 50 gives 1 m = 100 cm = 1000 mm."}, {"q": "According to the review, 1 kilometer equals:", "a": ["1000 meters", "100 meters", "10 meters", "10,000 meters"], "correct": 0, "explanation": "Page 50: 1 km = 1000 m."}, {"q": "According to the review, 1 inch equals:", "a": ["2.54 cm", "25.4 cm", "0.254 cm", "2.54 m"], "correct": 0, "explanation": "Page 50: 1 in = 2.54 cm."}, {"q": "Which laboratory apparatus is used to measure mass in grams?", "a": ["Balance", "Ruler", "Thermometer", "Graduated Cylinder"], "correct": 0, "explanation": "Page 50: A balance is used to measure mass in grams."}, {"q": "What should be placed on the pan first when using an electronic balance?", "a": ["A weigh boat", "The sample directly", "A graduated cylinder", "A thermometer"], "correct": 0, "explanation": "Page 50: Place a weigh boat on the pan first; close all doors if using an analytical balance."}, {"q": "After placing the weigh boat on an electronic balance, what should you do next?", "a": ["Press the zero/tare button and wait until digital units are displayed", "Add the sample immediately", "Round the mass reading", "Remove the weigh boat"], "correct": 0, "explanation": "Page 50: Press the zero/tare button and wait until digital units are displayed."}, {"q": "How should the mass be recorded from the electronic balance according to the review?", "a": ["Record all decimal place values shown; do not round", "Round to the nearest whole number", "Record only the first decimal place", "Estimate the final digit"], "correct": 0, "explanation": "Page 50: Record the mass using all decimal place values shown and do not round."}];
+const periodic = [{"q": "Who proposed the Modern Periodic Law, arranging elements in increasing order of atomic number?", "a": ["Henry Moseley", "Dmitri Mendeleev", "John Newlands", "Jöns Jakob Berzelius"], "correct": 0, "explanation": "Henry Moseley proposed the Modern Periodic Law, so the modern table is arranged by increasing atomic number rather than atomic weight.", "whyWrong": "Henry Moseley proposed the Modern Periodic Law, so the modern table is arranged by increasing atomic number rather than atomic weight."}, {"q": "What are the horizontal rows of the periodic table called?", "a": ["Groups", "Periods", "Blocks", "Families"], "correct": 1, "explanation": "The horizontal rows are called periods. Groups or families are the vertical columns.", "whyWrong": "The horizontal rows are called periods. Groups or families are the vertical columns."}, {"q": "What do elements within the same group generally share?", "a": ["The same atomic mass", "The same outer electron arrangement / valence-electron structure", "The same number of neutrons", "The same period number"], "correct": 1, "explanation": "Elements in the same group have the same outer-electron or valence-electron arrangement, which gives them similar chemical properties.", "whyWrong": "Elements in the same group have the same outer-electron or valence-electron arrangement, which gives them similar chemical properties."}, {"q": "What do the vertical columns of the periodic table represent?", "a": ["Periods", "Groups or families", "Atomic mass only", "Energy levels only"], "correct": 1, "explanation": "The vertical columns represent groups or families. Elements within a group share an outer-electron arrangement and similar chemical properties.", "whyWrong": "The vertical columns represent groups or families. Elements within a group share an outer-electron arrangement and similar chemical properties."}, {"q": "As you move across a period from left to right, atomic number generally:", "a": ["Increases", "Decreases", "Stays constant", "Becomes zero"], "correct": 0, "explanation": "Atomic number increases from left to right across a period. Each next element has one more proton than the previous element.", "whyWrong": "Atomic number increases from left to right across a period. Each next element has one more proton than the previous element."}, {"q": "The period number of an element signifies the:", "a": ["Number of valence electrons", "Highest unexcited energy level for an electron", "Number of neutrons", "Number of isotopes"], "correct": 1, "explanation": "The period number indicates the highest unexcited energy level occupied by an electron in that element.", "whyWrong": "The period number indicates the highest unexcited energy level occupied by an electron in that element."}, {"q": "Elements in the same group have similar chemical properties mainly because they have the same:", "a": ["Atomic mass", "Valence-electron arrangement", "Number of periods", "Number of isotopes"], "correct": 1, "explanation": "The valence-electron arrangement is the key similarity. Elements with the same outer-electron arrangement tend to have similar chemical properties.", "whyWrong": "The valence-electron arrangement is the key similarity. Elements with the same outer-electron arrangement tend to have similar chemical properties."}, {"q": "noble gases are found in:", "a": ["Group IA", "Group IIA", "Group VIIA", "Group VIII"], "correct": 3, "explanation": "Noble gases are in Group VIII. They have stable outer electron arrangements, which is why they are relatively unreactive.", "whyWrong": "Noble gases are in Group VIII. They have stable outer electron arrangements, which is why they are relatively unreactive."}, {"q": "Ionization energy is the energy required to:", "a": ["Add a neutron to an atom", "Remove an electron from an atom or ion", "Melt an element", "Form a nucleus"], "correct": 1, "explanation": "Ionization energy is the energy needed to remove an electron from an atom or ion.", "whyWrong": "Ionization energy is the energy needed to remove an electron from an atom or ion."}, {"q": "Electronegativity describes an atom's ability to:", "a": ["Attract electrons in a chemical compound", "Lose all of its neutrons", "Increase its atomic mass", "Emit visible light"], "correct": 0, "explanation": "Electronegativity is an atom's ability to attract electrons in a chemical compound. Fluorine has the strongest attraction for shared electrons.", "whyWrong": "Electronegativity is an atom's ability to attract electrons in a chemical compound. Fluorine has the strongest attraction for shared electrons."}, {"q": "Which element is identified in the lecture as having atoms that most strongly attract shared electrons?", "a": ["Oxygen", "Chlorine", "Fluorine", "Nitrogen"], "correct": 2, "explanation": "Fluorine most strongly attracts shared electrons. Oxygen, chlorine, and nitrogen are also electronegative, but fluorine is the strongest.", "whyWrong": "Fluorine most strongly attracts shared electrons. Oxygen, chlorine, and nitrogen are also electronegative, but fluorine is the strongest."}, {"q": "Moving from left to right across the periodic table, atomic radius generally:", "a": ["Increases", "Decreases", "Stays constant", "First increases then decreases"], "correct": 1, "explanation": "Atomic radius decreases from left to right. The opposite trend—an increase—occurs from top to bottom.", "whyWrong": "Atomic radius decreases from left to right. The opposite trend—an increase—occurs from top to bottom."}, {"q": "Moving from left to right across the periodic table, metallic character generally:", "a": ["Increases", "Decreases", "Stays constant", "Disappears immediately"], "correct": 1, "explanation": "Metallic character decreases from left to right, as the elements become less metallic and more nonmetallic across a period.", "whyWrong": "Metallic character decreases from left to right, as the elements become less metallic and more nonmetallic across a period."}, {"q": "Moving from left to right across the periodic table, ionization energy generally:", "a": ["Increases", "Decreases", "Stays constant", "Becomes zero"], "correct": 0, "explanation": "Ionization energy increases from left to right. Electrons become more difficult to remove across a period.", "whyWrong": "Ionization energy increases from left to right. Electrons become more difficult to remove across a period."}, {"q": "Moving from top to bottom within a group, atomic radius generally:", "a": ["Decreases", "Increases", "Stays constant", "Alternates"], "correct": 1, "explanation": "Atomic radius increases down a group because additional principal energy levels are added.", "whyWrong": "Atomic radius increases down a group because additional principal energy levels are added."}, {"q": "Moving from top to bottom within a group, ionization energy generally:", "a": ["Increases", "Decreases", "Stays constant", "Doubles"], "correct": 1, "explanation": "Ionization energy decreases down a group because additional energy levels increase shielding and make the outer electrons less tightly bound.", "whyWrong": "Ionization energy decreases down a group because additional energy levels increase shielding and make the outer electrons less tightly bound."}, {"q": "Moving from top to bottom within a group, electronegativity generally:", "a": ["Increases", "Decreases", "Stays constant", "Becomes exactly one"], "correct": 1, "explanation": "Electronegativity decreases down a group. Additional energy levels increase shielding, reducing the attraction for shared electrons.", "whyWrong": "Electronegativity decreases down a group. Additional energy levels increase shielding, reducing the attraction for shared electrons."}, {"q": "Which set is listed in the lecture as metalloids?", "a": ["B, Si, Ge, As, Sb, Te, At", "Li, Na, K, Rb, Cs, Fr", "He, Ne, Ar, Kr, Xe, Rn", "Fe, Co, Ni, Cu, Zn, Ag"], "correct": 0, "explanation": "The listed metalloids are B, Si, Ge, As, Sb, Te, and At. Metalloids have characteristics between metals and nonmetals.", "whyWrong": "The listed metalloids are B, Si, Ge, As, Sb, Te, and At. Metalloids have characteristics between metals and nonmetals."}, {"q": "Metalloids are described as useful in electronics because they are:", "a": ["Perfect insulators", "Semiconductors of electricity", "Highly reactive liquids", "Noble gases"], "correct": 1, "explanation": "Metalloids are semiconductors of electricity, which makes them useful in electronic equipment such as computer chips and solar batteries.", "whyWrong": "Metalloids are semiconductors of electricity, which makes them useful in electronic equipment such as computer chips and solar batteries."}, {"q": "Which group is identified as the alkali metals?", "a": ["Group IA", "Group IIA", "Group VIIA", "Group VIIIA"], "correct": 0, "explanation": "Group IA contains the alkali metals: Li, Na, K, Rb, Cs, and Fr.", "whyWrong": "Group IA contains the alkali metals: Li, Na, K, Rb, Cs, and Fr."}, {"q": "Which elements are listed as the Group IA alkali metals?", "a": ["Li, Na, K, Rb, Cs, Fr", "Be, Mg, Ca, Sr, Ba, Ra", "F, Cl, Br, I, At", "He, Ne, Ar, Kr, Xe, Rn"], "correct": 0, "explanation": "The Group IA alkali metals are Li, Na, K, Rb, Cs, and Fr.", "whyWrong": "The Group IA alkali metals are Li, Na, K, Rb, Cs, and Fr."}, {"q": "In the lecture, the alkali metals' reactivity generally:", "a": ["Decreases down the group", "Increases down the group from lithium to cesium", "Never changes", "Is highest only for lithium"], "correct": 1, "explanation": "Alkali-metal reactivity increases down the group from lithium to cesium.", "whyWrong": "Alkali-metal reactivity increases down the group from lithium to cesium."}, {"q": "Which element was discovered through scientific inquiry by Hennig Brand in 1649?", "a": ["Phosphorus", "Lithium", "Sodium", "Hydrogen"], "correct": 0, "explanation": "Phosphorus was the first element identified through scientific inquiry by Hennig Brand in 1649.", "whyWrong": "Phosphorus was the first element identified through scientific inquiry by Hennig Brand in 1649."}, {"q": "Who proposed a system of chemical symbols based on the first letter of an element's name and sometimes its Latin name?", "a": ["Jöns Jakob Berzelius", "Henry Moseley", "Glenn Seaborg", "John Newlands"], "correct": 0, "explanation": "Jöns Jakob Berzelius proposed the chemical-symbol system based on the first letter of an element's name and, in some cases, its Latin name.", "whyWrong": "Jöns Jakob Berzelius proposed the chemical-symbol system based on the first letter of an element's name and, in some cases, its Latin name."}, {"q": "Who arranged elements into groups of three called triads?", "a": ["Johann Dobereiner", "Antoine Lavoisier", "Dmitri Mendeleev", "Glenn Seaborg"], "correct": 0, "explanation": "Johann Dobereiner grouped elements with similar properties into triads. The middle element had properties that were an average of the other two.", "whyWrong": "Johann Dobereiner grouped elements with similar properties into triads. The middle element had properties that were an average of the other two."}, {"q": "John Newlands proposed the:", "a": ["Law of Octaves", "Modern Periodic Law", "Diagonal Rule", "Law of Conservation"], "correct": 0, "explanation": "John Newlands proposed the Law of Octaves, which described a repeating pattern of chemical properties every eighth element.", "whyWrong": "John Newlands proposed the Law of Octaves, which described a repeating pattern of chemical properties every eighth element."}, {"q": "Who predicted the existence and properties of unknown elements such as eka-aluminum, eka-boron, and eka-silicon?", "a": ["Henry Moseley", "Dmitri Mendeleev", "Glenn Seaborg", "Antoine Lavoisier"], "correct": 1, "explanation": "Dmitri Mendeleev predicted these unknown elements and their properties. Moseley is associated with arranging elements by atomic number, while Seaborg is associated with the transuranium elements and the actinide series.", "whyWrong": "Dmitri Mendeleev predicted these unknown elements and their properties. Moseley is associated with arranging elements by atomic number, while Seaborg is associated with the transuranium elements and the actinide series."}, {"q": "Which elements were later found to fit Mendeleev's predictions for eka-aluminum, eka-boron, and eka-silicon?", "a": ["Gallium, scandium, and germanium", "Lithium, sodium, and potassium", "Fluorine, chlorine, and bromine", "Iron, cobalt, and nickel"], "correct": 0, "explanation": "Gallium, scandium, and germanium were later found to fit Mendeleev's predictions for eka-aluminum, eka-boron, and eka-silicon.", "whyWrong": "Gallium, scandium, and germanium were later found to fit Mendeleev's predictions for eka-aluminum, eka-boron, and eka-silicon."}, {"q": "Glenn Seaborg discovered transuranium elements with atomic numbers:", "a": ["1 to 10", "11 to 20", "94 to 102", "113 to 118"], "correct": 2, "explanation": "Seaborg discovered transuranium elements with atomic numbers 94 through 102.", "whyWrong": "Seaborg discovered transuranium elements with atomic numbers 94 through 102."}, {"q": "The completion of the actinide series allowed Seaborg to redesign the periodic table by placing the lanthanide and actinide series:", "a": ["Above hydrogen", "Below the rest of the table", "Inside Group VIII only", "In the noble-gas column"], "correct": 1, "explanation": "The lanthanide and actinide series were placed below the main table to keep the periodic table from becoming too wide.", "whyWrong": "The lanthanide and actinide series were placed below the main table to keep the periodic table from becoming too wide."}, {"q": "Which four elements were named by IUPAC as the newly discovered elements listed in the lecture?", "a": ["Nihonium, Moscovium, Tennessine, Oganesson", "Gallium, Scandium, Germanium, Francium", "Lithium, Sodium, Potassium, Rubidium", "Hydrogen, Helium, Lithium, Beryllium"], "correct": 0, "explanation": "The four named elements are Nihonium (Nh), Moscovium (Mc), Tennessine (Ts), and Oganesson (Og).", "whyWrong": "The four named elements are Nihonium (Nh), Moscovium (Mc), Tennessine (Ts), and Oganesson (Og)."}, {"q": "Nihonium (Nh) is element number:", "a": ["113", "115", "117", "118"], "correct": 0, "explanation": "Nihonium (Nh) is atomic number 113.", "whyWrong": "Nihonium (Nh) is atomic number 113."}, {"q": "Moscovium (Mc) is element number:", "a": ["113", "115", "117", "118"], "correct": 1, "explanation": "Moscovium (Mc) is atomic number 115.", "whyWrong": "Moscovium (Mc) is atomic number 115."}, {"q": "Tennessine (Ts) is element number:", "a": ["113", "115", "117", "118"], "correct": 2, "explanation": "Tennessine (Ts) is atomic number 117.", "whyWrong": "Tennessine (Ts) is atomic number 117."}, {"q": "Oganesson (Og) is element number:", "a": ["113", "115", "117", "118"], "correct": 3, "explanation": "Oganesson (Og) is atomic number 118.", "whyWrong": "Oganesson (Og) is atomic number 118."}, {"q": "The s-block elements have valence configurations described in the lecture as:", "a": ["s¹ or s²", "s²p⁶ only", "d¹ to d¹⁰", "f¹ to f¹⁴"], "correct": 0, "explanation": "The s-block has valence configurations of s¹ or s². The s²p⁶ pattern belongs to a different electron-block description.", "whyWrong": "The s-block has valence configurations of s¹ or s². The s²p⁶ pattern belongs to a different electron-block description."}, {"q": "The p-block elements have valence configurations described as:", "a": ["s²p¹ to s²p⁶", "s¹ only", "d¹ to d¹⁰", "f¹ to f¹⁴"], "correct": 0, "explanation": "The p-block has valence configurations from s²p¹ to s²p⁶.", "whyWrong": "The p-block has valence configurations from s²p¹ to s²p⁶."}, {"q": "Which element is described as the lightest of all metals?", "a": ["Sodium", "Lithium", "Potassium", "Magnesium"], "correct": 1, "explanation": "Lithium is the lightest of all metals.", "whyWrong": "Lithium is the lightest of all metals."}, {"q": "Which ion is described as the predominant cation in intracellular fluid?", "a": ["Na⁺", "K⁺", "Li⁺", "H⁺"], "correct": 1, "explanation": "Potassium (K⁺) is the predominant cation in intracellular fluid.", "whyWrong": "Potassium (K⁺) is the predominant cation in intracellular fluid."}, {"q": "Which ion is described as the most abundant extracellular cation?", "a": ["K⁺", "Na⁺", "Li⁺", "NH₄⁺"], "correct": 1, "explanation": "Sodium (Na⁺) is the most abundant extracellular cation and is the predominant ion in extracellular fluid.", "whyWrong": "Sodium (Na⁺) is the most abundant extracellular cation and is the predominant ion in extracellular fluid."}, {"q": "Sodium is described in the lecture as important for:", "a": ["Neuronal transmission, muscle contraction, and osmoregulation", "Only bone formation", "Only vision", "Only digestion"], "correct": 0, "explanation": "Sodium is important for neuronal function and nerve-impulse transmission, muscle contraction, and osmoregulation.", "whyWrong": "Sodium is important for neuronal function and nerve-impulse transmission, muscle contraction, and osmoregulation."}, {"q": "Potassium deficiency is associated in the lecture with:", "a": ["Hypokalemia and muscle weakness", "Hyperglycemia only", "Anemia only", "Hearing loss only"], "correct": 0, "explanation": "Potassium deficiency causes hypokalemia and can lead to muscle weakness.", "whyWrong": "Potassium deficiency causes hypokalemia and can lead to muscle weakness."}, {"q": "Hydrogen is described as the:", "a": ["Heaviest element", "Lightest of all elements", "Only noble gas", "Only metal in Group IA"], "correct": 1, "explanation": "Hydrogen is the lightest of all elements.", "whyWrong": "Hydrogen is the lightest of all elements."}, {"q": "Which hydrogen isotope is the most abundant?", "a": ["Protium", "Deuterium", "Tritium", "None of them"], "correct": 0, "explanation": "Protium is the most abundant isotope of hydrogen. Deuterium and tritium are the heavier isotopes.", "whyWrong": "Protium is the most abundant isotope of hydrogen. Deuterium and tritium are the heavier isotopes."}, {"q": "Which hydrogen isotope is described as unstable?", "a": ["Protium", "Deuterium", "Tritium", "Hydrogen-4"], "correct": 2, "explanation": "Tritium is unstable. Deuterium and protium are the other hydrogen isotopes described.", "whyWrong": "Tritium is unstable. Deuterium and protium are the other hydrogen isotopes described."}, {"q": "Water fit to drink is called:", "a": ["Mineral water", "Potable water", "Saline water", "Sulfur water"], "correct": 1, "explanation": "Water that is fit to drink is called potable water.", "whyWrong": "Water that is fit to drink is called potable water."}, {"q": "Temporary hardness of water is associated with soluble:", "a": ["Calcium or magnesium bicarbonates", "Sodium chloride only", "Iron oxides only", "Ammonia only"], "correct": 0, "explanation": "Temporary hardness is caused by soluble calcium or magnesium bicarbonates.", "whyWrong": "Temporary hardness is caused by soluble calcium or magnesium bicarbonates."}, {"q": "Permanent hardness of water is caused by sulfates, chlorides, or hydroxides of:", "a": ["Calcium and/or magnesium", "Sodium only", "Hydrogen only", "Potassium only"], "correct": 0, "explanation": "Permanent hardness is caused by sulfates, chlorides, or hydroxides of calcium and/or magnesium.", "whyWrong": "Permanent hardness is caused by sulfates, chlorides, or hydroxides of calcium and/or magnesium."}, {"q": "E. coli in water can cause:", "a": ["Traveler's diarrhea", "Hypokalemia", "Acidosis", "Anemia"], "correct": 0, "explanation": "E. coli in water can cause diarrhea, including traveler's diarrhea.", "whyWrong": "E. coli in water can cause diarrhea, including traveler's diarrhea."}, {"q": "Ammonia is described as a colorless gas with a:", "a": ["Strong, pungent odor", "Sweet fruity odor", "Completely odorless character", "Metallic odor"], "correct": 0, "explanation": "Ammonia is a colorless gas with a strong, pungent characteristic odor.", "whyWrong": "Ammonia is a colorless gas with a strong, pungent characteristic odor."}, {"q": "Ammonia is described as a:", "a": ["Respiratory stimulant", "Noble gas", "Heavy metal", "Halogen"], "correct": 0, "explanation": "Ammonia is described as a respiratory stimulant.", "whyWrong": "Ammonia is described as a respiratory stimulant."}];
+
+/*
+  PUT YOUR PICTURES HERE:
+  Create a folder called "images" beside this HTML file.
+  Name each picture exactly like the value returned by imageFor().
+  Example:
+    images/beaker.png
+    images/erlenmeyer_flask.png
+    images/graduated_cylinder.png
+
+  You can use .png, .jpeg, .png, or .webp.
+*/
+const imageExtension = "png";
+
+function imageFor(name){
+  return "images/" + name.toLowerCase()
+    .replaceAll(" ","_")
+    .replaceAll("(","")
+    .replaceAll(")","")
+    .replaceAll("/","_") + "." + imageExtension;
+}
+
+let topic='', quizType=0, questions=[], current=0, score=0, answered=false, identificationLevel='';
+
+function show(id){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active')}
+function goHome(){show('home')}
+function chooseTopic(t){
+  topic=t;
+  document.getElementById('topicCrumb').textContent=t==='lab'?'🔬 Lab Apparatus':'⚛️ Periodic Table';
+  document.getElementById('functionQuizBtn').style.display=t==='lab'?'':'none';
+  document.getElementById('mixedQuizBtn').style.display=t==='lab'?'':'none';
+  document.getElementById('periodicExplorerBtn').style.display=t==='periodic'?'':'none';
+  document.getElementById('apparatusExplorerBtn').style.display=t==='lab'?'':'none';
+  show('types');
+}
+function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
+function choose(arr,n){return shuffle(arr).slice(0,n)}
+
+function showIdentificationLevels(){
+  document.getElementById('identificationCrumb').textContent=
+    topic==='lab'?'🔬 Lab Apparatus':'⚛️ Periodic Table';
+  show('identificationLevels');
+}
+
+function startIdentification(level){
+  identificationLevel=level;
+  quizType=level==='easy'?3:4;
+  current=0; score=0; answered=false;
+
+  if(topic==='periodic'){
+    if(level==='easy') questions=shuffle(periodic).map(makePeriodicEasyQuestion);
+    else questions=shuffle(periodic).map(makePeriodicIdentificationQuestion);
+  }else{
+    const pool=shuffle(apparatus);
+    questions=pool.map(x=> level==='easy' ? makePictureQuestion(x) : makeIdentificationQuestion(x));
+  }
+
+  document.getElementById('quizTitle').textContent=
+    (topic==='lab'?'🔬 Lab Apparatus':'⚛️ Periodic Table')+' • Identification • '+
+    (level==='easy'?'Easy':'Hard');
+
+  show('quiz'); render();
+}
+
+function startQuiz(type){
+  quizType=type; current=0; score=0; answered=false;
+
+  if(topic==='periodic'){
+    questions=shuffle(periodic).map(makePeriodicEasyQuestion);
+  }else{
+    const pool=shuffle(apparatus);
+    if(type===0){
+      questions=pool.map(x=>makePictureQuestion(x));
+    }else if(type===1){
+      // Identify by Function includes the apparatus functions PLUS measurement/function applications from Pages 46–50.
+      const apparatusQs=pool.map(x=>makeFunctionQuestion(x));
+      const pageQs=shuffle(labReview).map(makeReviewFunctionQuestion);
+      questions=shuffle([...apparatusQs,...pageQs]);
+    }else{
+      // Mixed Challenge combines apparatus pictures, apparatus functions, and Pages 46–50 review/application questions.
+      const pictureQs=pool.map(x=>makePictureQuestion(x));
+      const functionQs=pool.map(x=>makeFunctionQuestion(x));
+      const pageQs=shuffle(labReview).map(makeReviewQuestion);
+      questions=shuffle([...pictureQs,...functionQs,...pageQs]);
+    }
+  }
+
+  document.getElementById('quizTitle').textContent=
+    (topic==='lab'?'🔬 Lab Apparatus':'⚛️ Periodic Table')+' • '+
+    ['Identify the Picture','Identify by Function','Mixed Challenge','Identification'][type];
+
+  show('quiz'); render();
+}
+
+const elementData = [
+['H',1,1,1],
+['He',2,18,1],
+['Li',3,1,2],
+['Be',4,2,2],
+['B',5,13,2],
+['C',6,14,2],
+['N',7,15,2],
+['O',8,16,2],
+['F',9,17,2],
+['Ne',10,18,2],
+['Na',11,1,3],
+['Mg',12,2,3],
+['Al',13,13,3],
+['Si',14,14,3],
+['P',15,15,3],
+['S',16,16,3],
+['Cl',17,17,3],
+['Ar',18,18,3],
+['K',19,1,4],
+['Ca',20,2,4],
+['Sc',21,3,4],
+['Ti',22,4,4],
+['V',23,5,4],
+['Cr',24,6,4],
+['Mn',25,7,4],
+['Fe',26,8,4],
+['Co',27,9,4],
+['Ni',28,10,4],
+['Cu',29,11,4],
+['Zn',30,12,4],
+['Ga',31,13,4],
+['Ge',32,14,4],
+['As',33,15,4],
+['Se',34,16,4],
+['Br',35,17,4],
+['Kr',36,18,4],
+['Rb',37,1,5],
+['Sr',38,2,5],
+['Y',39,3,5],
+['Zr',40,4,5],
+['Nb',41,5,5],
+['Mo',42,6,5],
+['Tc',43,7,5],
+['Ru',44,8,5],
+['Rh',45,9,5],
+['Pd',46,10,5],
+['Ag',47,11,5],
+['Cd',48,12,5],
+['In',49,13,5],
+['Sn',50,14,5],
+['Sb',51,15,5],
+['Te',52,16,5],
+['I',53,17,5],
+['Xe',54,18,5],
+['Cs',55,1,6],
+['Ba',56,2,6],
+['La',57,3,6],
+['Ce',58,4,8],
+['Pr',59,5,8],
+['Nd',60,6,8],
+['Pm',61,7,8],
+['Sm',62,8,8],
+['Eu',63,9,8],
+['Gd',64,10,8],
+['Tb',65,11,8],
+['Dy',66,12,8],
+['Ho',67,13,8],
+['Er',68,14,8],
+['Tm',69,15,8],
+['Yb',70,16,8],
+['Lu',71,17,8],
+['Hf',72,4,6],
+['Ta',73,5,6],
+['W',74,6,6],
+['Re',75,7,6],
+['Os',76,8,6],
+['Ir',77,9,6],
+['Pt',78,10,6],
+['Au',79,11,6],
+['Hg',80,12,6],
+['Tl',81,13,6],
+['Pb',82,14,6],
+['Bi',83,15,6],
+['Po',84,16,6],
+['At',85,17,6],
+['Rn',86,18,6],
+['Fr',87,1,7],
+['Ra',88,2,7],
+['Ac',89,3,7],
+['Th',90,4,9],
+['Pa',91,5,9],
+['U',92,6,9],
+['Np',93,7,9],
+['Pu',94,8,9],
+['Am',95,9,9],
+['Cm',96,10,9],
+['Bk',97,11,9],
+['Cf',98,12,9],
+['Es',99,13,9],
+['Fm',100,14,9],
+['Md',101,15,9],
+['No',102,16,9],
+['Lr',103,17,9],
+['Rf',104,4,7],
+['Db',105,5,7],
+['Sg',106,6,7],
+['Bh',107,7,7],
+['Hs',108,8,7],
+['Mt',109,9,7],
+['Ds',110,10,7],
+['Rg',111,11,7],
+['Cn',112,12,7],
+['Nh',113,13,7],
+['Fl',114,14,7],
+['Mc',115,15,7],
+['Lv',116,16,7],
+['Ts',117,17,7],
+['Og',118,18,7]
+];
+
+const elementNames = {
+H:"Hydrogen",He:"Helium",Li:"Lithium",Be:"Beryllium",B:"Boron",C:"Carbon",N:"Nitrogen",O:"Oxygen",F:"Fluorine",Ne:"Neon",
+Na:"Sodium",Mg:"Magnesium",Al:"Aluminum",Si:"Silicon",P:"Phosphorus",S:"Sulfur",Cl:"Chlorine",Ar:"Argon",
+K:"Potassium",Ca:"Calcium",Sc:"Scandium",Ti:"Titanium",V:"Vanadium",Cr:"Chromium",Mn:"Manganese",Fe:"Iron",Co:"Cobalt",Ni:"Nickel",Cu:"Copper",Zn:"Zinc",Ga:"Gallium",Ge:"Germanium",As:"Arsenic",Se:"Selenium",Br:"Bromine",Kr:"Krypton",
+Rb:"Rubidium",Sr:"Strontium",Y:"Yttrium",Zr:"Zirconium",Nb:"Niobium",Mo:"Molybdenum",Tc:"Technetium",Ru:"Ruthenium",Rh:"Rhodium",Pd:"Palladium",Ag:"Silver",Cd:"Cadmium",In:"Indium",Sn:"Tin",Sb:"Antimony",Te:"Tellurium",I:"Iodine",Xe:"Xenon",
+Cs:"Cesium",Ba:"Barium",La:"Lanthanum",Hf:"Hafnium",Ta:"Tantalum",W:"Tungsten",Re:"Rhenium",Os:"Osmium",Ir:"Iridium",Pt:"Platinum",Au:"Gold",Hg:"Mercury",Tl:"Thallium",Pb:"Lead",Bi:"Bismuth",Po:"Polonium",At:"Astatine",Rn:"Radon",
+Fr:"Francium",Ra:"Radium",Ac:"Actinium",Rf:"Rutherfordium",Db:"Dubnium",Sg:"Seaborgium",Bh:"Bohrium",Hs:"Hassium",Mt:"Meitnerium",Ds:"Darmstadtium",Rg:"Roentgenium",Cn:"Copernicium",Nh:"Nihonium",Fl:"Flerovium",Mc:"Moscovium",Lv:"Livermorium",Ts:"Tennessine",Og:"Oganesson"
+};
+
+function openApparatusExplorer(){
+  show('apparatusExplorer');
+  const grid=document.getElementById('apparatusGrid');
+  if(grid.dataset.ready)return;
+  grid.dataset.ready='1';
+  apparatus.forEach(x=>{
+    const card=document.createElement('div');
+    card.className='apparatus-card';
+    card.tabIndex=0;
+    const img=imageFor(x.name);
+    card.innerHTML=`<img src="${img}" alt="${x.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="apparatus-missing" style="display:none">📷 Picture not found yet.</div><div class="apparatus-info"><div class="apparatus-name">${x.name}</div><div class="apparatus-function">${x.function}</div></div>`;
+    card.onclick=()=>openApparatusModal(x);
+    card.onkeydown=(e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openApparatusModal(x)}};
+    grid.appendChild(card);
+  });
+}
+
+function openApparatusModal(x){
+  document.getElementById('apparatusModalImg').src=imageFor(x.name);
+  document.getElementById('apparatusModalImg').alt=x.name;
+  document.getElementById('apparatusModalName').textContent=x.name;
+  document.getElementById('apparatusModalFunction').textContent=x.function;
+  document.getElementById('apparatusModal').classList.add('show');
+}
+function closeApparatusModal(){
+  document.getElementById('apparatusModal').classList.remove('show');
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeApparatusModal()});
+
+function openPeriodicTable(){
+  show('periodicExplorer');
+  const grid=document.getElementById('periodicGrid');
+  if(grid.dataset.ready)return;
+  grid.dataset.ready='1';
+  elementData.forEach(e=>{
+    const [sym,z,group,period]=e;
+    const b=document.createElement('button');
+    b.className='el';
+    b.style.gridColumn=group;
+    b.style.gridRow=period;
+    const series = period===8 ? 'Lanthanide series' : period===9 ? 'Actinide series' : null;
+    b.innerHTML=`<div class="z">${z}</div><div class="sym">${sym}</div><div class="name">${elementNames[sym]}</div>`;
+    b.title=`${elementNames[sym]} — ${sym} — Atomic number ${z} — ${series || `Group ${group} — Period ${period}`}`;
+    b.onclick=()=>document.getElementById('elementInfo').innerHTML=
+      `<b>${elementNames[sym]} (${sym})</b><br>Atomic number: ${z} &nbsp; • &nbsp; ${series ? series : `Group ${group} &nbsp; • &nbsp; Period ${period}`}`;
+    grid.appendChild(b);
+  });
+}
+
+function makePictureQuestion(x){
+  const others=choose(apparatus.filter(y=>y.name!==x.name),3);
+  return {
+    kind:'picture',
+    prompt:'What is the name of this laboratory apparatus?',
+    image:imageFor(x.name),
+    answers:shuffle([x.name,...others.map(y=>y.name)]),
+    correct:x.name,
+    explanation:x.function
+  };
+}
+
+function makeFunctionQuestion(x){
+  const others=choose(apparatus.filter(y=>y.name!==x.name),3);
+  return {
+    kind:'function',
+    prompt:'Which apparatus matches this function?',
+    functionText:x.function,
+    answers:shuffle([x.name,...others.map(y=>y.name)]),
+    correct:x.name,
+    image:imageFor(x.name),
+    explanation:x.function
+  };
+}
+
+function makeReviewQuestion(x){
+  return {kind:'review', q:x.q, answers:shuffle(x.a), correct:x.a[x.correct], explanation:x.explanation};
+}
+
+function makeReviewFunctionQuestion(x){
+  return {kind:'review', q:x.q, answers:shuffle(x.a), correct:x.a[x.correct], explanation:x.explanation};
+}
+
+function makeIdentificationQuestion(x){
+  return {kind:'identification', prompt:'Identify the laboratory apparatus. Type your answer:', image:imageFor(x.name), correct:x.name, explanation:x.function};
+}
+function makePeriodicEasyQuestion(x){ return {kind:'review', q:x.q, answers:shuffle(x.a), correct:x.a[x.correct], explanation:x.explanation}; }
+function makePeriodicIdentificationQuestion(x){ return {kind:'periodicIdentification', q:x.q, correct:x.a[x.correct], explanation:x.explanation}; }
+function render(){
+  answered=false;
+  const q=questions[current];
+  document.getElementById('counter').textContent=`${current+1} / ${questions.length}`;
+  document.getElementById('progressBar').style.width=`${(current/questions.length)*100}%`;
+  document.getElementById('feedback').textContent='';
+  document.getElementById('nextBtn').classList.add('hidden');
+  document.getElementById('explanation').classList.remove('show');
+  document.getElementById('explanation').innerHTML='';
+
+  if(q.kind==='picture'){
+    document.getElementById('question').innerHTML=`<h2>${q.prompt}</h2>`;
+    document.getElementById('imageWrap').innerHTML=
+      `<img class="quizimg" src="${q.image}" alt="Laboratory apparatus"
+       onerror="this.outerHTML='<div class=&quot;missing&quot;>📷 Picture not found yet.<br><br>Add your image at:<br><b>${q.image}</b></div>'">`;
+  }else if(q.kind==='identification'){
+    document.getElementById('question').innerHTML=`<h2>${q.prompt}</h2>`;
+    document.getElementById('imageWrap').innerHTML=`<img class="quizimg" src="${q.image}" alt="Laboratory apparatus" onerror="this.outerHTML='<div class=&quot;missing&quot;>📷 Picture not found yet.<br><br>Add your image at:<br><b>${q.image}</b></div>'">`;
+  }else if(q.kind==='periodicIdentification'){
+    document.getElementById('question').innerHTML=`<h2>${q.q}</h2>`;
+    document.getElementById('imageWrap').innerHTML='';
+  }else if(q.kind==='function'){
+    document.getElementById('question').innerHTML=`<h2>${q.prompt}</h2>
+      <div style="background:#f7f8fc;padding:20px;border-radius:15px;margin:10px 0 20px;text-align:left">
+      <b>Function:</b><br>${q.functionText}</div>`;
+    document.getElementById('imageWrap').innerHTML='';
+  }else if(q.kind==='review'){
+    document.getElementById('question').innerHTML=`<div style="display:inline-block;background:#eef2ff;color:#5967d9;font-weight:800;padding:6px 12px;border-radius:999px;margin-bottom:8px">Pages 46–50 Review</div><h2>${q.q}</h2>`;
+    document.getElementById('imageWrap').innerHTML='';
+  }else{
+    document.getElementById('question').innerHTML=`<h2>${q.q}</h2>`;
+    document.getElementById('imageWrap').innerHTML='';
+  }
+
+  const box=document.getElementById('answers'); box.innerHTML='';
+  if(q.kind==='identification' || q.kind==='periodicIdentification'){
+    const input=document.createElement('input');
+    input.className='identification-input'; input.id='identificationInput'; input.type='text';
+    input.placeholder='Type your answer here'; input.autocomplete='off';
+    input.addEventListener('keydown',e=>{if(e.key==='Enter') submitIdentification(q);});
+    box.appendChild(input);
+    const b=document.createElement('button'); b.className='primary'; b.textContent='Submit Answer';
+    b.onclick=()=>submitIdentification(q); box.appendChild(b);
+  }else{
+    q.answers.forEach(a=>{
+      const b=document.createElement('button');b.className='answer';b.textContent=a;
+      b.onclick=()=>answer(b,a,q);box.appendChild(b);
+    });
+  }
+}
+
+function normalizeAnswer(v){
+  return v.toLowerCase().trim().replace(/[.,!?]/g,'').replace(/\s+/g,' ');
+}
+
+function identificationAnswersMatch(typed, correct){
+  const a=normalizeAnswer(typed);
+  const b=normalizeAnswer(correct);
+
+  if(a===b)return true;
+
+  // Accept both spellings for Buret/Burette.
+  const buretForms=['buret','burette'];
+  if(buretForms.includes(a) && buretForms.includes(b))return true;
+
+  return false;
+}
+
+function submitIdentification(q){
+  if(answered)return;
+  const input=document.getElementById('identificationInput');
+  const val=input ? input.value.trim() : '';
+  if(!val){
+    document.getElementById('feedback').textContent='Please type an answer.';
+    return;
+  }
+
+  answered=true;
+  input.disabled=true;
+  const correct=identificationAnswersMatch(val,q.correct);
+
+  if(correct){
+    score++;
+    input.style.borderColor='#2e9d63';
+    input.style.background='#e9f8f0';
+    document.getElementById('feedback').textContent='✓ Correct!';
+  }else{
+    input.style.borderColor='#d64b4b';
+    input.style.background='#fff0f0';
+    document.getElementById('feedback').textContent='✗ Not quite!';
+  }
+
+  showAnswerExplanation(q, val, correct);
+  document.getElementById('progressBar').style.width=`${((current+1)/questions.length)*100}%`;
+  document.getElementById('nextBtn').classList.remove('hidden');
+}
+
+function answer(btn,val,q){
+  if(answered)return;
+  answered=true;
+  document.querySelectorAll('.answer').forEach(b=>b.disabled=true);
+
+  const correct=val===q.correct;
+  if(correct){
+    score++;btn.classList.add('correct');
+    document.getElementById('feedback').textContent='✓ Correct!';
+  }else{
+    btn.classList.add('wrong');
+    document.querySelectorAll('.answer').forEach(b=>{if(b.textContent===q.correct)b.classList.add('correct')});
+    document.getElementById('feedback').textContent='✗ Not quite!';
+  }
+
+  showAnswerExplanation(q, val, correct);
+
+  document.getElementById('progressBar').style.width=`${((current+1)/questions.length)*100}%`;
+  document.getElementById('nextBtn').classList.remove('hidden');
+}
+
+function nextQuestion(){
+  current++;
+  if(current>=questions.length) finish();
+  else render();
+}
+
+function finish(){
+  document.getElementById('score').textContent=`${score} / ${questions.length}`;
+  const pct=Math.round(score/questions.length*100);
+  document.getElementById('resultText').textContent=
+    `You scored ${pct}%. ${pct>=90?'Excellent work!':pct>=75?'Great job!':pct>=60?'Good effort—keep reviewing!':'Keep practicing and try again!'}`;
+  show('result');
+}
+
+function restart(){if(quizType===3||quizType===4)startIdentification(identificationLevel);else startQuiz(quizType)}
+
+function showWhyWrongExplanation(question, selectedAnswer, correctAnswer) {
+  const existing = document.getElementById('whyWrongExplanation');
+  if (existing) existing.remove();
+  const box = document.createElement('div');
+  box.id = 'whyWrongExplanation';
+  box.className = 'explanation';
+  box.innerHTML =
+    '<strong>Why your answer is incorrect:</strong><br>' +
+    (question.whyWrong || 'Your answer does not match the concept tested in this question.') +
+    '<br><br><strong>Remember:</strong> The correct answer is <strong>' +
+    String(correctAnswer).replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</strong>.';
+  const target = document.querySelector('.feedback, #feedback, .question-feedback, .result');
+  if (target) target.appendChild(box);
+  else document.body.appendChild(box);
+}
+
+function getPeriodicWhyWrong(question, selectedAnswer, correctAnswer) {
+  if (question && question.whyWrong) return question.whyWrong;
+  return "Your answer does not match the concept tested in this question.";
+}
+
+function escapeFeedbackText(value){
+  return String(value ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function showAnswerExplanation(q, selectedAnswer, isCorrect){
+  const explanation = q.explanation || '';
+  const selected = escapeFeedbackText(selectedAnswer);
+  const correct = escapeFeedbackText(q.correct);
+
+  // For Lab Apparatus questions, when the learner is wrong, also explain
+  // what their chosen apparatus is used for before showing the correct one.
+  const selectedApparatus = topic==='lab' ? apparatus.find(x=>
+    identificationAnswersMatch(selectedAnswer, x.name)
+  ) : null;
+  const correctApparatus = topic==='lab' ? apparatus.find(x=>
+    identificationAnswersMatch(q.correct, x.name)
+  ) : null;
+
+  let html = `<b>Answer: ${correct}</b><br><br><b>Explanation:</b> ${explanation}`;
+
+  if(!isCorrect){
+    html = `<b>Your answer: ${selected}</b>`;
+
+    if(selectedApparatus){
+      html += `<br><br><b>Use of ${escapeFeedbackText(selectedApparatus.name)}:</b> ${escapeFeedbackText(selectedApparatus.function)}`;
+    }
+
+    html += `<br><br><b>Correct answer: ${correct}</b>`;
+
+    if(correctApparatus){
+      html += `<br><br><b>Use of ${escapeFeedbackText(correctApparatus.name)}:</b> ${escapeFeedbackText(correctApparatus.function)}`;
+    } else {
+      html += `<br><br><b>Explanation:</b> ${explanation}`;
+    }
+  }
+
+  document.getElementById('explanation').innerHTML = html;
+  document.getElementById('explanation').classList.add('show');
+}
+</script>
+</body>
+</html>
