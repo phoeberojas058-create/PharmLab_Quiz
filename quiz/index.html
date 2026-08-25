@@ -29,6 +29,7 @@ h2{margin-top:0;font-size:28px}.grid{display:grid;grid-template-columns:repeat(a
 .explanation{display:none;text-align:left;background:#f5f7ff;border-left:5px solid #5967d9;border-radius:12px;padding:17px;margin:18px 0;line-height:1.6}
 .explanation.show{display:block}.explanation b{font-size:18px}
 .result{text-align:center}.score{font-size:58px;font-weight:850;margin:10px}.small{color:#667085}.hidden{display:none}
+.notes-content{line-height:1.72;color:#27304a}.notes-content p{margin:10px 0}.notes-content ul{line-height:1.8;padding-left:24px}.notes-content li{margin:4px 0}details{background:#f8f9fd;border:1px solid #e3e7ef;border-radius:15px;margin:12px 0;padding:0 16px}details[open]{background:#fff}summary{cursor:pointer;padding:17px 4px;font-size:17px;color:#27304a}summary:hover{color:#5967d9}
 .setup-note{background:#fff8e7;border:1px solid #f0d58a;border-radius:12px;padding:14px;margin-bottom:18px;line-height:1.5}
 code{background:#eef1f7;padding:2px 6px;border-radius:5px}
 .apparatus-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;margin-top:20px}.apparatus-card{position:relative;height:170px;border:2px solid #e7eaf0;border-radius:18px;background:#fff;overflow:hidden;transition:.2s;cursor:pointer}.apparatus-card img{width:100%;height:100%;object-fit:contain;padding:12px;display:block;transition:.25s}.apparatus-card .apparatus-info{position:absolute;left:8px;right:8px;bottom:8px;background:rgba(255,255,255,.96);border-radius:12px;padding:9px 10px;opacity:0;transform:translateY(8px);transition:.2s;box-shadow:0 5px 16px rgba(31,41,55,.12)}.apparatus-card .apparatus-name{font-weight:800;font-size:15px;margin-bottom:3px}.apparatus-card .apparatus-function{font-size:12px;color:#667085;line-height:1.35}.apparatus-card:hover{transform:scale(1.035);border-color:#5967d9;box-shadow:0 10px 24px rgba(31,41,55,.12);z-index:2}.apparatus-card:hover img{transform:scale(1.12)}.apparatus-card:hover .apparatus-info{opacity:1;transform:translateY(0)}.apparatus-missing{display:flex;align-items:center;justify-content:center;height:100%;padding:12px;text-align:center;color:#667085;font-size:12px}@media(max-width:650px){.apparatus-grid{grid-template-columns:repeat(2,minmax(130px,1fr))}.apparatus-card{height:155px}}
@@ -81,6 +82,7 @@ code{background:#eef1f7;padding:2px 6px;border-radius:5px}
 <button class="quiztype" onclick="showIdentificationLevels()"><div class="icon">✍️</div><h3>Identification</h3><p>Choose Easy for choices or Hard to type the answer with no choices.</p></button>
 <button id="functionQuizBtn" class="quiztype" onclick="startQuiz(1)"><div class="icon">🧠</div><h3>Identify by Function</h3><p>Use apparatus functions plus Pages 46–50 measurement/property applications, then see the answer and explanation.</p></button>
 <button id="mixedQuizBtn" class="quiztype" onclick="startQuiz(2)"><div class="icon">🎯</div><h3>Mixed Challenge</h3><p>Randomized challenge combining apparatus pictures, functions, and Pages 46–50: matter, properties, accuracy/precision, and measurement.</p></button>
+<button id="botanyNotesBtn" class="quiztype" onclick="openBotanyNotes()" style="display:none"><div class="icon">📚</div><h3>Botany Notes</h3><p>Study the lecture material section-by-section before taking the quiz.</p></button>
 <button id="periodicExplorerBtn" class="quiztype" onclick="openPeriodicTable()" style="display:none"><div class="icon">⚛️</div><h3>Explore Periodic Table</h3><p>Explore the interactive periodic table and view basic element information.</p></button>
 <button id="apparatusExplorerBtn" class="quiztype" onclick="openApparatusExplorer()" style="display:none"><div class="icon">🔬</div><h3>Explore Lab Apparatus</h3><p>Browse the laboratory apparatus pictures and hover over them to see their names and explanations.</p></button>
 </div>
@@ -95,6 +97,97 @@ code{background:#eef1f7;padding:2px 6px;border-radius:5px}
 <button class="quiztype" onclick="startIdentification('easy')"><div class="icon">😊</div><h3>Easy</h3><p>Choose the correct answer from the choices. For Periodic Table and Botany, this uses the lecture question bank.</p></button>
 <button class="quiztype" onclick="startIdentification('hard')"><div class="icon">🔥</div><h3>Hard</h3><p>Type the answer with no choices. Capitalization does not matter.</p></button>
 </div>
+</div>
+</section>
+
+<section id="botanyNotes" class="screen">
+<div class="card">
+<div class="topbar"><span class="crumb">📚 Pharmaceutical Botany and Taxonomy • Notes</span><button class="secondary" onclick="show('types')">← Quiz Types</button></div>
+<h2>Introduction to Botany — Quick Notes</h2>
+<p class="small">Short reviewer-style notes based only on the supplied lecture PDF. Use the quiz for detailed practice.</p>
+
+<details open><summary><b>1. Botany & Branches</b></summary><div class="notes-content">
+<ul>
+<li><b>Botany</b> — scientific study of plants.</li>
+<li><b>Botanikos</b> — botanical.</li><li><b>Botane</b> — plant or herb.</li><li><b>Boskein</b> — to feed.</li><li><b>Botanique</b> — French for botanical.</li>
+</ul>
+<p><b>Branches:</b></p><ul>
+<li><b>Plant Anatomy</b> — internal structure.</li>
+<li><b>Plant Physiology</b> — plant function.<ul><li>J. B. van Helmont; plants do not have the same nutritional needs as animals.</li></ul></li>
+<li><b>Plant Taxonomy</b> — describes, names, classifies plants; oldest branch.</li>
+<li><b>Plant Systematics</b> — broader than taxonomy; groups organisms.</li>
+<li><b>Plant Geology</b> — plants of former ages; fossil remains.</li>
+<li><b>Plant Geography</b> — plant distribution.</li>
+<li><b>Plant Ecology</b> — plants and their environment/interactions.</li>
+<li><b>Plant Morphology</b> — form and structure.</li>
+<li><b>Genetics</b> — heredity; Gregor Mendel used pea plants.</li>
+<li><b>Genomics</b> — genes and their function.</li>
+<li><b>Cell Biology</b> — cell structure and function.</li>
+<li><b>Economic Botany & Ethnobotany</b> — practical uses of plants/products: food, fiber, medicines, etc.</li>
+</ul>
+</div></details>
+
+<details><summary><b>2. Early Botanists & Contributions</b></summary><div class="notes-content"><ul>
+<li><b>Leon Ma. Guerrero</b><ul><li>Father of Botany in the Philippines</li><li>National Scientist</li><li>Father of Pharmacy in the Philippines</li></ul></li>
+<li><b>Theophrastus</b><ul><li>Father of Botany</li></ul></li>
+<li><b>Philippus Aureolus Bombastus von Hohenheim</b><ul><li>Pioneered minerals/chemicals in medicine</li><li>Examples: mercury, lead, arsenic, antimony</li><li>Helped introduce chemistry into medicine</li><li>Lecture point: poison depends on the dose</li></ul></li>
+<li><b>Shen Nung</b><ul><li>Associated with <i>Pen T'sao</i></li><li>Traditional Chinese medical literature on medicinal substances</li><li>Lecture describes testing herbs on himself</li></ul></li>
+<li><b>Robert Hooke</b><ul><li>Observed cork</li><li>Saw tiny box-like structures</li><li>Called them <b>cells</b></li></ul></li>
+<li><b>Robert Brown</b><ul><li>Discovered the plant cell's <b>nucleus</b></li><li>Lecture also mentions erratic pollen-grain movement in water</li></ul></li>
+<li><b>Rudolf Virchow</b><ul><li>“Omnis cellula e cellula”</li><li>Cells are living things</li><li>Cellular pathology: disease involves changes in normal cells</li></ul></li>
+<li><b>7 Linnaean classifications</b> — listed as a historical/taxonomic heading in the lecture.</li>
+</ul></div></details>
+
+<details><summary><b>3. Origin of Life</b></summary><div class="notes-content"><ul>
+<li><b>Panspermia / Extraterrestrial Origin</b><ul><li>Given by Richer in 1865</li><li>Also called <b>cosmozoic theory</b></li><li><i>Panspermia</i> = “seeds everywhere”</li><li>Life's “seeds” are proposed to exist throughout the Universe</li><li>They may travel through space from one location to another</li></ul></li>
+<li><b>Spontaneous Generation</b><ul><li>Associated with <b>Aristotle</b></li><li>Living beings could arise from inert/non-living matter</li><li>No pre-existing body involved in the proposed creation</li><li>Lecture describes its adoption as a doctrine that merged with creationist concepts supported by the Church</li></ul></li>
+</ul></div></details>
+
+<details><summary><b>4. Evolution & Natural Selection</b></summary><div class="notes-content"><ul>
+<li><b>Scientists:</b> Charles Darwin + Alfred Russel Wallace</li>
+<li><b>Theory:</b> Evolution by Natural Selection</li>
+<li><b>Natural selection:</b><ul><li>Organisms produce more offspring than can survive.</li><li>Better-equipped organisms are more likely to survive, mature, and reproduce.</li><li>Less-fit organisms may not reach reproductive age.</li><li>They may also produce fewer offspring.</li></ul></li>
+</ul></div></details>
+
+<details><summary><b>5. Plant Adaptation</b></summary><div class="notes-content"><ul>
+<li><b>Behavioral</b> — responses that support survival/reproduction.</li>
+<li><b>Physiological</b> — body processes/metabolism important for survival/reproduction.</li>
+<li><b>Structural</b> — physical traits that support survival/reproduction.</li>
+</ul></div></details>
+
+<details><summary><b>6. Behavioral Adaptations</b></summary><div class="notes-content"><ul>
+<li><b>Nature:</b><ul><li>Usually not passed from generation to generation in the lecture's description</li><li>Acquired during an individual's lifetime</li><li>Allow quick responses to environmental changes</li></ul></li>
+<li><b>Phototropism / Heliotropism</b> — response for getting sunlight<ul><li>Plants grow/lean toward the sun</li><li>Vines climb trees for sunlight</li><li>Shoots grow toward light to maximize photosynthetic yield</li></ul></li>
+<li><b>Thigmotropism</b> — response to touch<ul><li>May grow toward the touch</li><li>May respond away from the touch</li></ul></li>
+<li><b>Gravitropism / Geotropism</b> — response to gravity<ul><li>Stems grow away from gravity</li><li>Roots grow in the opposite direction</li></ul></li>
+<li><b>Water & nutrients</b><ul><li>Roots penetrate deep into soil</li><li>Desert flowers may remain dormant until rain</li></ul></li>
+<li><b>Why they occur:</b><ul><li>Respond to changing light, water, temperature, and predation</li><li>Use available resources</li><li>Protect against threats</li><li>Support reproduction and fitness</li></ul></li>
+</ul></div></details>
+
+<details><summary><b>7. Physiological Adaptations & Homeostasis</b></summary><div class="notes-content"><ul>
+<li><b>Physiological adaptation</b> — continuous cellular, biochemical, and metabolic changes.</li>
+<li><b>Purpose:</b><ul><li>Keep the organism balanced</li><li>Improve adaptation to environmental change</li><li>Respond to environmental stimulation</li><li>Help preserve homeostasis</li></ul></li>
+<li><b>Inheritance:</b> genetically determined and transmissible to the next generation.</li>
+<li><b>Homeostasis</b> — self-regulation that maintains internal stability while conditions change.</li>
+<li><b>Homeostasis goals:</b><ul><li>Maintain water/nutrient uptake from soil to leaves</li><li>Control stomatal opening</li><li>Minimize water loss</li><li>Maximize CO₂ absorption</li></ul></li>
+<li><b>Significance:</b><ul><li>Supports survival in ecological niches</li><li>Supports healthy growth and development</li><li>Helps manage temperature, pressure, ionic balance, and metabolic rates</li><li>Conserves and maximizes resources</li></ul></li>
+</ul></div></details>
+
+<details><summary><b>8. Structural Adaptations</b></summary><div class="notes-content"><ul>
+<li><b>Structural adaptation</b> — physical feature evolved to help survival in a specific environment.</li>
+<li><b>Can occur in:</b> leaves, stems, roots, reproductive structures.</li>
+<li><b>Helps with:</b> water scarcity, extreme temperatures, poor soil, predation.</li>
+<li><b>Usually:</b> inheritable and transgenerational.</li>
+<li><b>Reproduction:</b><ul><li>Bright petals attract pollinators</li><li>Pollinators listed: birds, bees, insects</li></ul></li>
+<li><b>Seed dispersal:</b><ul><li>Sweet fruits attract animals</li><li>Animals spread seeds</li></ul></li>
+<li><b>Defense:</b> spines and/or hairs.</li>
+<li><b>Food & water conservation:</b><ul><li>Desert plants may have stout stems</li><li>Desert plants may have fewer leaves</li><li>Used as a heat-coping strategy</li></ul></li>
+<li><b>Significance:</b><ul><li>Survival and reproduction</li><li>Allows plants to live in diverse habitats</li><li>Examples: deserts, wetlands, forests, mountains</li><li>Maximizes resources</li><li>Defends against herbivores</li><li>Supports continuation of the species</li></ul></li>
+</ul></div></details>
+
+<details><summary><b>9. Quick Identification</b></summary><div class="notes-content"><ul>
+<li><b>Internal structure</b> → Plant Anatomy</li><li><b>Plant function</b> → Plant Physiology</li><li><b>Describe, name, classify</b> → Plant Taxonomy</li><li><b>Broader grouping</b> → Plant Systematics</li><li><b>Fossil plants</b> → Plant Geology</li><li><b>Plant distribution</b> → Plant Geography</li><li><b>Plant-environment interactions</b> → Plant Ecology</li><li><b>Form and structure</b> → Plant Morphology</li><li><b>Heredity</b> → Genetics</li><li><b>Genes + function</b> → Genomics</li><li><b>Cell structure/function</b> → Cell Biology</li><li><b>Practical plant uses</b> → Economic Botany & Ethnobotany</li><li><b>Father of Botany</b> → Theophrastus</li><li><b>Father of Botany in Philippines</b> → Leon Ma. Guerrero</li><li><b>Minerals/chemicals in medicine</b> → Hohenheim</li><li><b>Pen T'sao</b> → Shen Nung</li><li><b>Cork cells</b> → Robert Hooke</li><li><b>Plant cell nucleus</b> → Robert Brown</li><li><b>Omnis cellula e cellula</b> → Rudolf Virchow</li><li><b>“Seeds everywhere”</b> → Panspermia</li><li><b>Life from inert matter</b> → Spontaneous Generation</li><li><b>Natural selection</b> → Darwin & Wallace</li><li><b>Light</b> → Phototropism / Heliotropism</li><li><b>Touch</b> → Thigmotropism</li><li><b>Gravity</b> → Gravitropism / Geotropism</li><li><b>Internal stability</b> → Homeostasis</li><li><b>Physical survival traits</b> → Structural Adaptations</li>
+</ul></div></details>
 </div>
 </section>
 
@@ -1385,10 +1478,13 @@ function chooseTopic(t){
   document.getElementById('mixedQuizBtn').style.display=t==='lab'?'':'none';
   document.getElementById('periodicExplorerBtn').style.display=t==='periodic'?'':'none';
   document.getElementById('apparatusExplorerBtn').style.display=t==='lab'?'':'none';
+  document.getElementById('botanyNotesBtn').style.display=t==='botany'?'':'none';
   show('types');
 }
 function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
 function choose(arr,n){return shuffle(arr).slice(0,n)}
+
+function openBotanyNotes(){ show('botanyNotes'); }
 
 function showIdentificationLevels(){
   document.getElementById('identificationCrumb').textContent=
