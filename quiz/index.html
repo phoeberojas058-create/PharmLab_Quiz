@@ -39,21 +39,43 @@ code{background:#eef1f7;padding:2px 6px;border-radius:5px}
 </head>
 <body>
 <div class="app">
-<header><div class="logo">🧪</div><div class="title">PharmLab Quiz</div><div class="subtitle">Laboratory Apparatus & Periodic Table Review</div></header>
+<header><div class="logo">🧪</div><div class="title">PharmLab Quiz</div><div class="subtitle">Pharmaceutical Subjects Review</div></header>
 
 <section id="home" class="screen active">
 <div class="card">
+<h2>Choose a subject</h2>
+<div class="grid">
+<button class="topic" onclick="openSubject('inorganic')"><div class="icon">⚗️</div><h3>Pharmaceutical Inorganic Chemistry</h3><p>Periodic Table and Laboratory Apparatus.</p></button>
+<button class="topic" onclick="openSubject('botany')"><div class="icon">🌿</div><h3>Pharmaceutical Botany and Taxonomy</h3><p>Introduction to Botany based on your lecture PDF.</p></button>
+<div class="topic" style="cursor:default;opacity:.78"><div class="icon">🧮</div><h3>Pharmaceutical Calculations</h3><p><b>Coming Soon</b> — quiz content will be added later.</p></div>
+</div>
+</div>
+</section>
+
+<section id="inorganicSubjects" class="screen">
+<div class="card">
+<div class="topbar"><span class="crumb">⚗️ Pharmaceutical Inorganic Chemistry</span><button class="secondary" onclick="goHome()">← Subjects</button></div>
 <h2>Choose a topic</h2>
 <div class="grid">
-<button class="topic" onclick="chooseTopic('lab')"><div class="icon">🔬</div><h3>Lab Apparatus</h3><p>Identify laboratory equipment using your own pictures.</p></button>
+<button class="topic" onclick="chooseTopic('lab')"><div class="icon">🔬</div><h3>Lab Apparatus</h3><p>Identify laboratory equipment and review its functions.</p></button>
 <button class="topic" onclick="chooseTopic('periodic')"><div class="icon">⚛️</div><h3>Periodic Table</h3><p>Review periods, groups, trends, history, and elements from your lecture.</p></button>
+</div>
+</div>
+</section>
+
+<section id="botanySubjects" class="screen">
+<div class="card">
+<div class="topbar"><span class="crumb">🌿 Pharmaceutical Botany and Taxonomy</span><button class="secondary" onclick="goHome()">← Subjects</button></div>
+<h2>Choose a topic</h2>
+<div class="grid">
+<button class="topic" onclick="chooseTopic('botany')"><div class="icon">🌱</div><h3>Introduction to Botany</h3><p>Branches of botany, early botanists, origin of life, evolution, and plant adaptation.</p></button>
 </div>
 </div>
 </section>
 
 <section id="types" class="screen">
 <div class="card">
-<div class="topbar"><span class="crumb" id="topicCrumb"></span><button class="secondary" onclick="goHome()">← Topics</button></div>
+<div class="topbar"><span class="crumb" id="topicCrumb"></span><button class="secondary" onclick="goHome()">← Subjects</button></div>
 <h2>Choose your quiz type</h2>
 <div class="grid">
 <button class="quiztype" onclick="showIdentificationLevels()"><div class="icon">✍️</div><h3>Identification</h3><p>Choose Easy for choices or Hard to type the answer with no choices.</p></button>
@@ -70,7 +92,7 @@ code{background:#eef1f7;padding:2px 6px;border-radius:5px}
 <div class="topbar"><span class="crumb" id="identificationCrumb"></span><button class="secondary" onclick="show('types')">← Quiz Types</button></div>
 <h2>Identification</h2>
 <div class="grid">
-<button class="quiztype" onclick="startIdentification('easy')"><div class="icon">😊</div><h3>Easy</h3><p>Choose the correct answer from the choices. For Periodic Table, this uses the lecture question bank.</p></button>
+<button class="quiztype" onclick="startIdentification('easy')"><div class="icon">😊</div><h3>Easy</h3><p>Choose the correct answer from the choices. For Periodic Table and Botany, this uses the lecture question bank.</p></button>
 <button class="quiztype" onclick="startIdentification('hard')"><div class="icon">🔥</div><h3>Hard</h3><p>Type the answer with no choices. Capitalization does not matter.</p></button>
 </div>
 </div>
@@ -128,6 +150,1203 @@ code{background:#eef1f7;padding:2px 6px;border-radius:5px}
 <script>
 const apparatus = [{"name": "Beaker", "function": "mix chemicals, dissolve solids into solutions, heat or cool solutions, and estimate liquid volume"}, {"name": "Erlenmeyer Flask", "function": "mix, dissolve solids into solutions, heat or cool solutions, and swirl solutions with minimum loss"}, {"name": "Graduated Cylinder", "function": "more accurately measure volumes of liquids in milliliters (mL)"}, {"name": "Volumetric Flask", "function": "accurately prepare solutions to a specified fill line"}, {"name": "Pipet (Pipette)", "function": "measure or transfer liquids"}, {"name": "Micropipet (Micropipette)", "function": "precisely transfer small volumes of liquids"}, {"name": "Dropper", "function": "draw in a liquid and expel it in drops"}, {"name": "Buret (Burette)", "function": "accurately measure volumes of reagents and dispense solution during titration"}, {"name": "Ring Stand", "function": "support laboratory apparatus using rings and clamps"}, {"name": "Double Buret Clamp", "function": "hold up to two burets on a ring stand"}, {"name": "Support Ring", "function": "stabilize flasks, beakers, and other glassware over the work area"}, {"name": "Test Tube Clamp", "function": "hold test tubes and other cylindrical laboratory equipment"}, {"name": "Test Tube Rack", "function": "hold test tubes upright or upside down to dry"}, {"name": "Test Tube", "function": "mix, heat, and store small quantities of chemicals"}, {"name": "Test Tube Brush", "function": "clean test tubes and narrow-mouth laboratory glassware"}, {"name": "Funnel", "function": "pour liquids into narrow-mouth containers"}, {"name": "Mortar And Pestle", "function": "crush and grind substances into a fine paste or powder"}, {"name": "Crucible And Cover", "function": "heat solid chemicals at high temperatures; the cover contains smoke particles"}, {"name": "Clay Triangle", "function": "hold a crucible while it is being heated"}, {"name": "Watch Glass", "function": "cover beakers, evaporate water, weigh solid chemicals, or observe samples"}, {"name": "Evaporating Dish", "function": "separate water and solids from a solution by evaporation"}, {"name": "Bunsen Burner", "function": "provide heat for experiments"}, {"name": "Hot Plate", "function": "heat glassware or its contents; some can stir liquids automatically"}, {"name": "Hot Mitt", "function": "grip and transfer hot glassware"}, {"name": "Wire Gauze", "function": "diffuse heat and support glassware during heating"}, {"name": "Test Tube Holder", "function": "hold and transport hot test tubes"}, {"name": "Crucible Tongs", "function": "hold and transport hot crucibles"}, {"name": "Beaker Tongs", "function": "hold and transport hot beakers"}, {"name": "Weigh Boat", "function": "hold samples for weighing"}, {"name": "Scoopula (Metal Scoop)", "function": "transfer solids from one place to another"}, {"name": "Top-Loading Balance", "function": "measure the mass of substances accurately"}, {"name": "Analytical Balance", "function": "measure mass more precisely than a top-loading balance"}, {"name": "Well Plate", "function": "provide multiple small wells used like small test tubes"}, {"name": "Forceps", "function": "grasp and hold small objects"}, {"name": "Thermometer", "function": "measure temperature in degrees Celsius or Fahrenheit"}, {"name": "Ruler", "function": "measure distance or length"}, {"name": "Stirring Rod", "function": "stir mixtures and facilitate pouring of liquids"}, {"name": "Wash Bottle", "function": "store and dispense distilled or deionized water"}, {"name": "Goggles", "function": "protect the eyes when handling chemicals or glass"}, {"name": "Apron", "function": "protect clothing from chemical spills"}, {"name": "Three-Prong Clamp", "function": "secure lab equipment to a ring stand"}, {"name": "Graduated Pipet", "function": "transfer a precise volume of liquid"}, {"name": "Thin Stem Pipet", "function": "transfer small amounts of liquid, usually one drop at a time"}, {"name": "Stopwatch", "function": "time how long something takes to complete"}, {"name": "Centrifuge", "function": "separate fluids of different densities or liquids from solids"}, {"name": "Petri Dish", "function": "hold specimens for observation and grow cultures"}, {"name": "Triangular File", "function": "score glass tubing to create clean breaks"}];
 const labReview = [{"q": "Which statement best defines matter?", "a": ["Anything that has mass and takes up space (volume)", "Anything that has color", "Anything that can dissolve in water", "Anything that can be seen"], "correct": 0, "explanation": "Page 46: Matter is anything that has mass and takes up space (volume)."}, {"q": "What is density?", "a": ["The amount of matter in a given volume", "The temperature of a substance", "The ability of a substance to react", "The distance an object travels"], "correct": 0, "explanation": "Page 46: Density is the amount of matter in a given volume."}, {"q": "Which equation from the review gives density?", "a": ["Density = Mass / Volume", "Density = Volume / Mass", "Density = Mass × Volume", "Density = Mass + Volume"], "correct": 0, "explanation": "Page 46: Density = Mass / Volume, with units such as g/mL or g/cm³."}, {"q": "Which type of mixture is the same throughout and is described as a solution?", "a": ["Homogeneous mixture", "Heterogeneous mixture", "Element", "Compound"], "correct": 0, "explanation": "Page 46: Homogeneous mixtures are the same throughout; solutions are examples."}, {"q": "Which type of mixture is different throughout?", "a": ["Heterogeneous mixture", "Homogeneous mixture", "Element", "Compound"], "correct": 0, "explanation": "Page 46: Heterogeneous mixtures are different throughout."}, {"q": "Which is a pure substance made of only one type of atom?", "a": ["Element", "Compound", "Homogeneous mixture", "Heterogeneous mixture"], "correct": 0, "explanation": "Page 46: Elements are pure substances made of only one type of atom."}, {"q": "Which is a pure substance made of two or more elements chemically combined?", "a": ["Compound", "Element", "Homogeneous mixture", "Heterogeneous mixture"], "correct": 0, "explanation": "Page 46: Compounds are made of two or more elements chemically combined."}, {"q": "Which is a physical property because it can be observed or measured without changing the composition of matter?", "a": ["Density", "Flammability", "Reactivity with other chemicals", "Ability to rust"], "correct": 0, "explanation": "Page 47: Physical properties can be observed or measured without changing composition; density is an example."}, {"q": "Which of the following is listed as a physical property?", "a": ["Solubility", "Toxicity", "Flammability", "Chemical stability"], "correct": 0, "explanation": "Page 47 lists solubility as a physical property."}, {"q": "Which of the following is also a physical property listed in the review?", "a": ["Melting point", "Ability to rust", "Flammability", "Reactivity with other chemicals"], "correct": 0, "explanation": "Page 47 lists melting and boiling points as physical properties."}, {"q": "A property that can only be observed or measured by performing a chemical change or reaction is a:", "a": ["Chemical property", "Physical property", "Measurement unit", "Mixture"], "correct": 0, "explanation": "Page 48: Chemical properties require a chemical change or chemical reaction to become apparent."}, {"q": "Which is an example of a chemical property from the review?", "a": ["Flammability", "Color", "Texture", "Appearance"], "correct": 0, "explanation": "Page 48 lists flammability as a chemical property."}, {"q": "Which property describes how a substance reacts with other chemicals?", "a": ["Reactivity", "Density", "Texture", "Solubility"], "correct": 0, "explanation": "Page 48 lists reactivity with other chemicals as a chemical property."}, {"q": "Which statement about chemical properties is correct?", "a": ["The sample's structure must be altered for the chemical property to become apparent.", "They can always be determined just by viewing a sample.", "They never involve a chemical reaction.", "They are the same as physical properties."], "correct": 0, "explanation": "Page 48: Chemical properties cannot be determined simply by touching or viewing; the sample's structure must be altered."}, {"q": "Accuracy means:", "a": ["Coming close to a true or desired value", "Having measurements close to each other regardless of the true value", "Recording more decimal places", "Using a larger measuring device"], "correct": 0, "explanation": "Page 49: Accuracy is coming close to a true or desired value."}, {"q": "Precision describes:", "a": ["How well a series of measurements agree with each other", "How close a measurement is to the true value only", "How quickly a measurement is taken", "How large the measuring instrument is"], "correct": 0, "explanation": "Page 49: Precision reflects how well a series of measurements agree with each other."}, {"q": "What can often be adjusted through calibration to yield values that are both accurate and precise?", "a": ["Precision", "Color", "Density", "Volume"], "correct": 0, "explanation": "Page 49: Precision can often be adjusted using calibration to yield values that are both accurate and precise."}, {"q": "Percent error expresses:", "a": ["How far a measured value is from the true value", "How many measurements were taken", "How much mass a sample has", "How many units are in a meter"], "correct": 0, "explanation": "Page 49: Percent error expresses how far a measured value is from the true value."}, {"q": "Which laboratory apparatus is used to measure distance or length?", "a": ["Ruler", "Balance", "Thermometer", "Centrifuge"], "correct": 0, "explanation": "Page 50: A ruler is used to measure distance/length."}, {"q": "Which conversion is given in the measurement review?", "a": ["1 m = 100 cm = 1000 mm", "1 m = 10 cm = 100 mm", "1 km = 100 m", "1 in = 2.54 m"], "correct": 0, "explanation": "Page 50 gives 1 m = 100 cm = 1000 mm."}, {"q": "According to the review, 1 kilometer equals:", "a": ["1000 meters", "100 meters", "10 meters", "10,000 meters"], "correct": 0, "explanation": "Page 50: 1 km = 1000 m."}, {"q": "According to the review, 1 inch equals:", "a": ["2.54 cm", "25.4 cm", "0.254 cm", "2.54 m"], "correct": 0, "explanation": "Page 50: 1 in = 2.54 cm."}, {"q": "Which laboratory apparatus is used to measure mass in grams?", "a": ["Balance", "Ruler", "Thermometer", "Graduated Cylinder"], "correct": 0, "explanation": "Page 50: A balance is used to measure mass in grams."}, {"q": "What should be placed on the pan first when using an electronic balance?", "a": ["A weigh boat", "The sample directly", "A graduated cylinder", "A thermometer"], "correct": 0, "explanation": "Page 50: Place a weigh boat on the pan first; close all doors if using an analytical balance."}, {"q": "After placing the weigh boat on an electronic balance, what should you do next?", "a": ["Press the zero/tare button and wait until digital units are displayed", "Add the sample immediately", "Round the mass reading", "Remove the weigh boat"], "correct": 0, "explanation": "Page 50: Press the zero/tare button and wait until digital units are displayed."}, {"q": "How should the mass be recorded from the electronic balance according to the review?", "a": ["Record all decimal place values shown; do not round", "Round to the nearest whole number", "Record only the first decimal place", "Estimate the final digit"], "correct": 0, "explanation": "Page 50: Record the mass using all decimal place values shown and do not round."}];
+/* ================================================================
+   BOTANY QUESTION BANK — EDIT THIS SECTION
+   ---------------------------------------------------------------
+   Each question uses this simple format:
+   {
+     q: "Question shown to the student",
+     a: ["Choice 1", "Choice 2", "Choice 3", "Choice 4"],
+     correct: 0,
+     explanation: "Shown after answering."
+   },
+
+   IMPORTANT: correct is the ZERO-BASED position in a[].
+   0 = first choice, 1 = second, 2 = third, 3 = fourth.
+   You can freely edit q, the four choices in a, and explanation.
+   The quiz automatically shuffles the choices in Easy mode.
+   Hard mode uses the correct answer automatically.
+   Content is based only on the supplied Intro to Botany PDF.
+   ================================================================ */
+/* ================================================================
+   BOTANY QUESTION BANK — EDIT QUESTIONS HERE
+   ---------------------------------------------------------------
+   To add/edit a question, change only these four fields:
+     q: "the question",
+     a: ["choice 1", "choice 2", "choice 3", "choice 4"],
+     correct: 0,
+     explanation: "the explanation shown after answering"
+
+   correct uses ZERO-BASED numbering:
+     0 = first choice | 1 = second | 2 = third | 3 = fourth
+
+   Easy mode automatically shuffles the choices.
+   Hard mode asks for the answer with no choices.
+   All 103 questions below are based on the supplied PDF.
+   ================================================================ */
+const botany = [
+
+  // ============================================================
+  // BRANCHES OF BOTANY
+  // ============================================================
+  {
+    q: "What is botany?",
+    a: [
+      "The scientific study of plants",
+      "The study of animals",
+      "The study of rocks",
+      "The study of medicines only"
+    ],
+    correct: 0,
+    explanation: "The lecture defines botany as the scientific study of plants."
+  },
+  {
+    q: "Which Greek word in the lecture means plant or herb?",
+    a: [
+      "botane",
+      "boskein",
+      "botanikos",
+      "botanique"
+    ],
+    correct: 0,
+    explanation: "The lecture gives botane as Greek for plant or herb."
+  },
+  {
+    q: "Which branch of botany is chiefly concerned with the internal structure of plants?",
+    a: [
+      "Plant Anatomy",
+      "Plant Morphology",
+      "Plant Geography",
+      "Plant Ecology"
+    ],
+    correct: 0,
+    explanation: "Plant Anatomy is concerned chiefly with the internal structure of plants."
+  },
+  {
+    q: "Which branch of botany is concerned with plant function?",
+    a: [
+      "Plant Physiology",
+      "Plant Taxonomy",
+      "Plant Geology",
+      "Plant Geography"
+    ],
+    correct: 0,
+    explanation: "Plant Physiology is concerned with plant function."
+  },
+  {
+    q: "Which branch involves describing, naming, and classifying plant organisms?",
+    a: [
+      "Plant Taxonomy",
+      "Plant Anatomy",
+      "Plant Ecology",
+      "Plant Morphology"
+    ],
+    correct: 0,
+    explanation: "Plant Taxonomy involves describing, naming, and classifying plant organisms."
+  },
+  {
+    q: "According to the lecture, which is the oldest branch of plant study?",
+    a: [
+      "Plant Taxonomy",
+      "Plant Systematics",
+      "Plant Physiology",
+      "Plant Geography"
+    ],
+    correct: 0,
+    explanation: "The lecture identifies Plant Taxonomy as the oldest branch of plant study."
+  },
+  {
+    q: "Which field is broader than taxonomy and develops methods for grouping organisms?",
+    a: [
+      "Plant Systematics",
+      "Plant Anatomy",
+      "Plant Geology",
+      "Economic Botany"
+    ],
+    correct: 0,
+    explanation: "Plant Systematics is described as a related field that is broader than taxonomy and concerns methods for grouping organisms."
+  },
+  {
+    q: "Which field treats of plants of former ages traceable in fossil remains?",
+    a: [
+      "Plant Geology",
+      "Plant Geography",
+      "Plant Ecology",
+      "Plant Morphology"
+    ],
+    correct: 0,
+    explanation: "Plant Geology treats of plants of former ages traceable in fossil remains."
+  },
+  {
+    q: "Which branch studies how and why plants are distributed where they are?",
+    a: [
+      "Plant Geography",
+      "Plant Ecology",
+      "Plant Taxonomy",
+      "Plant Physiology"
+    ],
+    correct: 0,
+    explanation: "Plant Geography studies how and why plants are distributed where they are."
+  },
+  {
+    q: "Which branch studies interactions of plants with one another and with their environment?",
+    a: [
+      "Plant Ecology",
+      "Plant Geography",
+      "Plant Anatomy",
+      "Plant Geology"
+    ],
+    correct: 0,
+    explanation: "Plant Ecology studies plant interactions with one another and with their environment."
+  },
+  {
+    q: "Which branch studies the form and structure of plants?",
+    a: [
+      "Plant Morphology",
+      "Plant Anatomy",
+      "Plant Taxonomy",
+      "Plant Physiology"
+    ],
+    correct: 0,
+    explanation: "Plant Morphology is the study of the form and structure of plants."
+  },
+  {
+    q: "Who founded genetics according to the lecture?",
+    a: [
+      "Gregor Mendel",
+      "Robert Hooke",
+      "Robert Brown",
+      "Rudolf Virchow"
+    ],
+    correct: 0,
+    explanation: "The lecture states that genetics was founded by Austrian monk Gregor Mendel, based on his classic pea-plant experiments."
+  },
+  {
+    q: "What does genomics focus on according to the lecture?",
+    a: [
+      "Genes and their function",
+      "Fossil plants",
+      "Plant distribution",
+      "Internal plant structure"
+    ],
+    correct: 0,
+    explanation: "The lecture states that genomics focuses on genes and their function."
+  },
+  {
+    q: "Which field focuses on practical uses of plants and plant products?",
+    a: [
+      "Economic botany and ethnobotany",
+      "Plant Anatomy",
+      "Plant Geology",
+      "Plant Systematics"
+    ],
+    correct: 0,
+    explanation: "Economic botany and ethnobotany focus on practical uses of plants and plant products."
+  },
+  {
+    q: "Who is identified as the Father of Botany in the Philippines?",
+    a: [
+      "Leon Ma. Guerrero",
+      "Theophrastus",
+      "Shen Nung",
+      "Robert Hooke"
+    ],
+    correct: 0,
+    explanation: "The lecture identifies Leon Ma. Guerrero as Father of Botany in the Philippines, a National Scientist, and Father of Pharmacy in the Philippines."
+  },
+
+  // ============================================================
+  // EARLY BOTANISTS
+  // ============================================================
+  {
+    q: "Who is identified as the Father of Botany?",
+    a: [
+      "Theophrastus",
+      "Leon Ma. Guerrero",
+      "Robert Brown",
+      "Rudolf Virchow"
+    ],
+    correct: 0,
+    explanation: "The lecture identifies Theophrastus as the Father of Botany."
+  },
+  {
+    q: "Who pioneered the use of minerals and other chemicals in medicine according to the lecture?",
+    a: [
+      "Philippus Aureolus Bombastus von Hohenheim",
+      "Theophrastus",
+      "Shen Nung",
+      "Gregor Mendel"
+    ],
+    correct: 0,
+    explanation: "The lecture credits Philippus Aureolus Bombastus von Hohenheim with pioneering the use of minerals and other chemicals in medicine."
+  },
+  {
+    q: "Which substances are specifically listed in the lecture in connection with Hohenheim's use of minerals and chemicals in medicine?",
+    a: [
+      "Mercury, lead, arsenic and antimony",
+      "Calcium, sodium, potassium and iron",
+      "Carbon, hydrogen, oxygen and nitrogen",
+      "Gold, silver, copper and zinc"
+    ],
+    correct: 0,
+    explanation: "The lecture specifically lists mercury, lead, arsenic and antimony."
+  },
+  {
+    q: "Who is associated with the Pen T'sao, traditional Chinese medical literature documenting herbal and medicinal substances?",
+    a: [
+      "Shen Nung",
+      "Robert Hooke",
+      "Theophrastus",
+      "Charles Darwin"
+    ],
+    correct: 0,
+    explanation: "The lecture associates Shen Nung with the Pen T'sao and describes it as traditional Chinese medical literature documenting herbal and other medicinal substances."
+  },
+  {
+    q: "What did Robert Hooke observe in his cork experiment?",
+    a: [
+      "Tiny boxes he called cells",
+      "The plant cell nucleus",
+      "Pollen's erratic movement",
+      "Stomatal opening"
+    ],
+    correct: 0,
+    explanation: "The lecture says Hooke used cork cells and saw tiny boxes, which he called cells."
+  },
+  {
+    q: "What did Robert Brown discover in plant cells?",
+    a: [
+      "The nucleus",
+      "The cell wall",
+      "Chloroplasts",
+      "Stomata"
+    ],
+    correct: 0,
+    explanation: "The lecture states that Robert Brown discovered the plant cell's nucleus."
+  },
+  {
+    q: "The continuous or erratic movement of pollen grains in water is associated in the lecture with whom?",
+    a: [
+      "Robert Brown",
+      "Robert Hooke",
+      "Rudolf Virchow",
+      "Gregor Mendel"
+    ],
+    correct: 0,
+    explanation: "The lecture places the pollen-grain movement observation on Robert Brown's slide."
+  },
+  {
+    q: "What phrase is associated with Rudolf Virchow's cell theory contribution?",
+    a: [
+      "Omnis cellula e cellula",
+      "Survival of the fittest",
+      "Seeds everywhere",
+      "Botane"
+    ],
+    correct: 0,
+    explanation: "The lecture gives Virchow's phrase as 'omnis cellula e cellula'."
+  },
+  {
+    q: "What did Rudolf Virchow argue about disease?",
+    a: [
+      "Disease is caused by changes in normal cells",
+      "Disease is caused only by plants",
+      "Disease is caused by gravity",
+      "Disease results from spontaneous plant generation"
+    ],
+    correct: 0,
+    explanation: "The lecture says Virchow argued that disease is caused by changes in normal cells, known as cellular pathology."
+  },
+  {
+    q: "What does panspermia mean?",
+    a: [
+      "Seeds everywhere",
+      "Life from plants only",
+      "Life from water",
+      "Cells from cells"
+    ],
+    correct: 0,
+    explanation: "The lecture states that panspermia means 'seeds everywhere'."
+  },
+
+  // ============================================================
+  // ORIGIN OF LIFE & EVOLUTION
+  // ============================================================
+  {
+    q: "Panspermia is also known as what theory?",
+    a: [
+      "Cosmozoic theory",
+      "Natural selection theory",
+      "Spontaneous generation theory",
+      "Cellular pathology theory"
+    ],
+    correct: 0,
+    explanation: "The lecture calls panspermia the cosmozoic theory."
+  },
+  {
+    q: "According to the lecture, who gave the panspermia hypothesis in 1865?",
+    a: [
+      "Richer",
+      "Aristotle",
+      "Darwin",
+      "Wallace"
+    ],
+    correct: 0,
+    explanation: "The lecture states that panspermia was given by Richer in 1865."
+  },
+  {
+    q: "What does the panspermia hypothesis propose?",
+    a: [
+      "Seeds of life exist throughout the Universe and can be propagated through space",
+      "Plants arise from mineral chemicals in soil",
+      "All organisms are created from inert matter on Earth",
+      "Only plants can reproduce"
+    ],
+    correct: 0,
+    explanation: "The lecture states that seeds of life exist all over the Universe and can be propagated through space from one location to another."
+  },
+  {
+    q: "Which origin-of-life theory is identified as the first simplistic theory concerning the origin of life?",
+    a: [
+      "Spontaneous Generation Theory",
+      "Panspermia",
+      "Natural Selection",
+      "Cell Theory"
+    ],
+    correct: 0,
+    explanation: "The lecture identifies spontaneous generation as the first simplistic theory concerning the origin of life."
+  },
+  {
+    q: "Who is associated with the spontaneous generation theory in the lecture?",
+    a: [
+      "Aristotle",
+      "Darwin",
+      "Mendel",
+      "Hooke"
+    ],
+    correct: 0,
+    explanation: "The lecture associates spontaneous generation with Aristotle."
+  },
+  {
+    q: "What is the central claim of spontaneous generation as presented in the lecture?",
+    a: [
+      "Some living beings could be created from inert matter without a pre-existing body",
+      "All life came from extraterrestrial seeds",
+      "Only the strongest organisms reproduce",
+      "Plants always reproduce sexually"
+    ],
+    correct: 0,
+    explanation: "The lecture states that some living beings could be created from inert matter without involvement with a pre-existing body."
+  },
+  {
+    q: "Who are named in the lecture in connection with the theory of evolution by natural selection?",
+    a: [
+      "Charles Darwin and Alfred Russel Wallace",
+      "Gregor Mendel and Robert Hooke",
+      "Theophrastus and Shen Nung",
+      "Robert Brown and Rudolf Virchow"
+    ],
+    correct: 0,
+    explanation: "The lecture names Charles Darwin and Alfred Russel Wallace."
+  },
+  {
+    q: "In natural selection, why do some organisms leave more offspring than others?",
+    a: [
+      "Those better physically equipped to survive grow to maturity and reproduce",
+      "They are always larger",
+      "They are always plants",
+      "They avoid all environmental changes"
+    ],
+    correct: 0,
+    explanation: "The lecture states that organisms better physically equipped to survive are more likely to reach maturity and reproduce."
+  },
+
+  // ============================================================
+  // PLANT ADAPTATION — GENERAL & BEHAVIORAL
+  // ============================================================
+  {
+    q: "What are the three types of plant adaptation listed in the lecture?",
+    a: [
+      "Behavioral, physiological, and structural",
+      "Anatomical, chemical, and taxonomic",
+      "Ecological, geological, and genetic",
+      "Reproductive, cellular, and geographic"
+    ],
+    correct: 0,
+    explanation: "The lecture divides adaptations into behavioral, physiological, and structural types."
+  },
+  {
+    q: "What is a behavioral adaptation according to the lecture?",
+    a: [
+      "A plant's response that supports its ability to survive and reproduce",
+      "A fixed physical feature only",
+      "A taxonomic classification",
+      "A fossil characteristic"
+    ],
+    correct: 0,
+    explanation: "Behavioral adaptations are described as plant responses that support survival and reproduction."
+  },
+  {
+    q: "How does the lecture characterize the nature of behavioral adaptations?",
+    a: [
+      "Typically acquired over an individual's lifetime rather than passed from generation to generation",
+      "Always inherited unchanged",
+      "Only found in fossils",
+      "Only caused by mutations"
+    ],
+    correct: 0,
+    explanation: "The lecture says behavioral adaptations are typically not passed down from one generation to the next but are acquired over an individual's lifetime."
+  },
+  {
+    q: "Plants growing their shoots toward a light source to maximize photosynthetic yield is an example of what?",
+    a: [
+      "Phototropism/heliotropism",
+      "Thigmotropism",
+      "Gravitropism/geotropism",
+      "Homeostasis"
+    ],
+    correct: 0,
+    explanation: "The lecture identifies growth toward sunlight as phototropism/heliotropism."
+  },
+  {
+    q: "Vines climbing trees to catch sunlight are given as an example of which adaptation?",
+    a: [
+      "Phototropism/heliotropism",
+      "Thigmotropism",
+      "Gravitropism/geotropism",
+      "Physiological adaptation"
+    ],
+    correct: 0,
+    explanation: "The lecture gives vines climbing trees to catch sunlight under phototropism/heliotropism."
+  },
+  {
+    q: "Which tropism describes a plant response to touch?",
+    a: [
+      "Thigmotropism",
+      "Phototropism",
+      "Gravitropism",
+      "Heliotropism"
+    ],
+    correct: 0,
+    explanation: "Thigmotropism is the behavioral adaptation described as a response to touch."
+  },
+  {
+    q: "Which tropism describes plant responses to gravity?",
+    a: [
+      "Gravitropism/geotropism",
+      "Thigmotropism",
+      "Phototropism",
+      "Heliotropism"
+    ],
+    correct: 0,
+    explanation: "The lecture identifies gravitropism/geotropism as the response to gravity."
+  },
+  {
+    q: "According to the lecture, how do plant stems and roots respond to gravity?",
+    a: [
+      "Stems grow away from the gravitational field while roots grow in the other direction",
+      "Both grow away from gravity",
+      "Both grow toward light only",
+      "Roots grow away while stems stop growing"
+    ],
+    correct: 0,
+    explanation: "The lecture states that stems grow away from the gravitational field while roots grow in the other direction."
+  },
+  {
+    q: "Which is given as an adaptation for obtaining water and nutrients?",
+    a: [
+      "Roots grow and penetrate deep into the soil",
+      "Flowers develop bright petals",
+      "Stems grow toward light",
+      "Leaves form spines"
+    ],
+    correct: 0,
+    explanation: "The lecture gives deep root growth as an adaptation for getting water and nutrients."
+  },
+  {
+    q: "What may desert flowers do as an adaptation related to water availability?",
+    a: [
+      "Stay dormant and come to life when it rains",
+      "Grow only toward artificial light",
+      "Develop sweet fruits",
+      "Open stomata permanently"
+    ],
+    correct: 0,
+    explanation: "The lecture says desert flowers may stay dormant and only come to life when it rains."
+  },
+  {
+    q: "Why do behavioral adaptations occur, according to the lecture?",
+    a: [
+      "They allow plants to respond dynamically and immediately to environmental changes",
+      "They make plants permanently fixed",
+      "They eliminate the need for resources",
+      "They prevent all reproduction"
+    ],
+    correct: 0,
+    explanation: "The lecture emphasizes immediate, flexible responses to changing environmental conditions."
+  },
+
+  // ============================================================
+  // PHYSIOLOGICAL ADAPTATIONS & HOMEOSTASIS
+  // ============================================================
+  {
+    q: "What is a physiological adaptation?",
+    a: [
+      "Continuous intracellular, biochemical, and metabolic changes that help keep the organism in balance",
+      "A physical spine or hair",
+      "A fossil feature",
+      "A method of naming plants"
+    ],
+    correct: 0,
+    explanation: "The lecture defines physiological adaptations in terms of intracellular, biochemical, and metabolic changes that maintain balance."
+  },
+  {
+    q: "According to the lecture, physiological adaptations are genetically determined and therefore what?",
+    a: [
+      "Transmissible from one generation to the next",
+      "Never inherited",
+      "Only acquired during one lifetime",
+      "Unrelated to environmental stimulation"
+    ],
+    correct: 0,
+    explanation: "The lecture states that physiological adaptations are genetically determined and transmissible from one generation to the next."
+  },
+  {
+    q: "What is homeostasis?",
+    a: [
+      "A self-regulating mechanism that preserves internal stability while adapting to changing conditions",
+      "The naming of plant species",
+      "Growth toward sunlight",
+      "Seed dispersal by animals"
+    ],
+    correct: 0,
+    explanation: "The lecture defines homeostasis as a self-regulating mechanism preserving internal stability while adapting to shifting environmental circumstances."
+  },
+  {
+    q: "Which is a stated goal of plant homeostasis in the lecture?",
+    a: [
+      "Maintain adequate uptake of water and nutrients from soil into leaves",
+      "Prevent all gas exchange",
+      "Stop root growth",
+      "Eliminate stomata"
+    ],
+    correct: 0,
+    explanation: "One stated goal is maintaining adequate uptake of water and nutrients from soil into leaves."
+  },
+  {
+    q: "How does stomatal control contribute to homeostasis according to the lecture?",
+    a: [
+      "It minimizes water loss while maximizing CO2 absorption",
+      "It stops all water movement",
+      "It increases predation",
+      "It prevents photosynthesis"
+    ],
+    correct: 0,
+    explanation: "The lecture states that controlling stomatal opening minimizes water loss and maximizes CO2 absorption."
+  },
+  {
+    q: "What is a structural adaptation?",
+    a: [
+      "A physical feature evolved over time that helps a plant survive in a specific environment",
+      "A temporary response only",
+      "A method of grouping organisms",
+      "A metabolic reaction only"
+    ],
+    correct: 0,
+    explanation: "Structural adaptations are physical features that evolved over time to help plants survive in specific environments."
+  },
+  {
+    q: "Structural adaptations can occur in which plant parts according to the lecture?",
+    a: [
+      "Leaves, stems, roots, and reproductive structures",
+      "Only roots",
+      "Only flowers",
+      "Only cells"
+    ],
+    correct: 0,
+    explanation: "The lecture lists leaves, stems, roots, and reproductive structures."
+  },
+  {
+    q: "Structural adaptations are usually described in the lecture as what?",
+    a: [
+      "Inheritable and transgenerational",
+      "Acquired only during an individual's lifetime",
+      "Temporary and reversible",
+      "Unrelated to survival"
+    ],
+    correct: 0,
+    explanation: "The lecture says structural adaptations are usually inheritable and pertain to transgenerational adjustments."
+  },
+  {
+    q: "Brightly colored petals that attract birds, bees, and insects are an example of structural adaptation for what?",
+    a: [
+      "Reproduction",
+      "Defense",
+      "Water conservation",
+      "Gravity response"
+    ],
+    correct: 0,
+    explanation: "The lecture gives brightly colored petals as a reproductive adaptation that attracts pollinators."
+  },
+
+  // ============================================================
+  // STRUCTURAL ADAPTATIONS
+  // ============================================================
+  {
+    q: "Sweet fruits that attract animals and help spread seeds are an example of structural adaptation for what?",
+    a: [
+      "Reproduction",
+      "Defense",
+      "Homeostasis",
+      "Getting sunlight"
+    ],
+    correct: 0,
+    explanation: "The lecture says sweet fruits attract animals and thereby spread seeds."
+  },
+  {
+    q: "Formation and modification of spines and/or hairs is an example of structural adaptation for what?",
+    a: [
+      "Defense",
+      "Reproduction",
+      "Water uptake",
+      "Photosynthesis"
+    ],
+    correct: 0,
+    explanation: "The lecture identifies spines and/or hairs as structural adaptations for defense."
+  },
+  {
+    q: "As a heat-coping strategy, what do desert plants do according to the lecture?",
+    a: [
+      "Grow stout stems and fewer leaves",
+      "Develop more delicate leaves",
+      "Grow only shallow roots",
+      "Stop all structural growth"
+    ],
+    correct: 0,
+    explanation: "The lecture states that desert plants may grow stout stems and fewer leaves as a heat-coping strategy."
+  },
+  {
+    q: "What is one significance of structural adaptations?",
+    a: [
+      "They help plants occupy diverse habitats and maximize resource acquisition",
+      "They prevent all environmental change",
+      "They eliminate reproduction",
+      "They make all plants identical"
+    ],
+    correct: 0,
+    explanation: "The lecture states that structural adaptations help plants occupy diverse habitats, maximize resource acquisition, defend against herbivores, and reproduce successfully."
+  },
+  {
+    q: "According to the lecture's review answer, what type of adaptation allows desert plants like cacti to survive in arid environments?",
+    a: [
+      "Succulence",
+      "Phototropism",
+      "Thigmotropism",
+      "Cellular pathology"
+    ],
+    correct: 0,
+    explanation: "The lecture's review answer identifies succulence, or water storage in thick, fleshy tissues, as the adaptation."
+  },
+  {
+    q: "Which plant response is specifically given as an example that helps regulate homeostasis?",
+    a: [
+      "Stomata opening and closing",
+      "Flowers becoming brightly colored",
+      "Vines climbing trees",
+      "Fruits becoming sweet"
+    ],
+    correct: 0,
+    explanation: "The lecture's review answer gives stomata opening/closing to regulate homeostasis."
+  },
+
+  // ============================================================
+  // ADDITIONAL PDF DETAIL QUESTIONS
+  // ============================================================
+  {
+    q: "Which Greek word listed in the lecture means 'botanical'?",
+    a: [
+      "botanikos",
+      "botane",
+      "boskein",
+      "botanique"
+    ],
+    correct: 0,
+    explanation: "The lecture lists botanikos as the Greek word meaning botanical."
+  },
+  {
+    q: "Which Greek word listed in the lecture means 'to feed'?",
+    a: [
+      "boskein",
+      "botane",
+      "botanikos",
+      "botanique"
+    ],
+    correct: 0,
+    explanation: "The lecture lists boskein as the Greek word meaning to feed."
+  },
+  {
+    q: "Which French word is listed in the lecture as meaning 'botanical'?",
+    a: [
+      "botanique",
+      "botane",
+      "boskein",
+      "botanikos"
+    ],
+    correct: 0,
+    explanation: "The lecture lists the French word botanique as botanical."
+  },
+  {
+    q: "Who established plant physiology according to the lecture?",
+    a: [
+      "J. B. van Helmont",
+      "Gregor Mendel",
+      "Robert Brown",
+      "Theophrastus"
+    ],
+    correct: 0,
+    explanation: "The lecture states that plant physiology was established by J. B. van Helmont (1577–1644), a Flemish physician and chemist."
+  },
+  {
+    q: "What did J. B. van Helmont first demonstrate according to the lecture?",
+    a: [
+      "Plants do not have the same nutritional needs as animals",
+      "Plants are classified by their fossils",
+      "Plants respond to gravity",
+      "Plants contain a nucleus"
+    ],
+    correct: 0,
+    explanation: "The lecture says van Helmont was the first to demonstrate that plants do not have the same nutritional needs as animals."
+  },
+  {
+    q: "Which branch of botany is described as the oldest branch of plant study?",
+    a: [
+      "Plant Taxonomy",
+      "Plant Physiology",
+      "Plant Morphology",
+      "Plant Ecology"
+    ],
+    correct: 0,
+    explanation: "The lecture explicitly describes Plant Taxonomy as the oldest branch of plant study."
+  },
+  {
+    q: "What is the main focus of plant systematics as described in the lecture?",
+    a: [
+      "Developing methods for grouping organisms",
+      "Studying fossil plants only",
+      "Measuring plant temperature",
+      "Studying plant function only"
+    ],
+    correct: 0,
+    explanation: "The lecture describes Plant Systematics as a broader field related to taxonomy and the science of developing methods for grouping organisms."
+  },
+  {
+    q: "What does plant morphology study?",
+    a: [
+      "The form and structure of plants",
+      "How plants are distributed",
+      "Plant fossils only",
+      "Plant function"
+    ],
+    correct: 0,
+    explanation: "The lecture defines Plant Morphology as the study of the form and structure of plants."
+  },
+  {
+    q: "What does plant geography study?",
+    a: [
+      "How and why plants are distributed where they are",
+      "Interactions between plants and their environment",
+      "Internal plant structure",
+      "Plant naming and classification"
+    ],
+    correct: 0,
+    explanation: "The lecture defines Plant Geography as the study of how and why plants are distributed where they are."
+  },
+  {
+    q: "What does plant ecology study?",
+    a: [
+      "Interactions of plants with one another and with their environment",
+      "Plant fossils from former ages",
+      "The form and structure of plants",
+      "The naming of plant organisms"
+    ],
+    correct: 0,
+    explanation: "The lecture defines Plant Ecology as the study of the interaction of plants with one another and with their environment."
+  },
+  {
+    q: "According to the lecture, genetics is the science of what?",
+    a: [
+      "Heredity",
+      "Plant distribution",
+      "Plant fossils",
+      "Plant taxonomy only"
+    ],
+    correct: 0,
+    explanation: "The lecture identifies genetics as the science of heredity and associates it with Gregor Mendel's pea-plant experiments."
+  },
+  {
+    q: "What type of experiments did Gregor Mendel perform that the lecture identifies as classic?",
+    a: [
+      "Experiments with pea plants",
+      "Experiments with cork cells",
+      "Experiments with pollen in water",
+      "Experiments with desert flowers"
+    ],
+    correct: 0,
+    explanation: "The lecture states that Gregor Mendel performed classic experiments with pea plants."
+  },
+  {
+    q: "According to the lecture, genomics focuses on what?",
+    a: [
+      "Genes and their function",
+      "Plant fossils",
+      "Plant geography",
+      "Plant morphology"
+    ],
+    correct: 0,
+    explanation: "The lecture states that genomics focuses on genes and their function."
+  },
+  {
+    q: "Economic botany and ethnobotany focus on what according to the lecture?",
+    a: [
+      "Practical uses of plants and plant products",
+      "Only plant fossils",
+      "Only plant cell nuclei",
+      "Only plant classification"
+    ],
+    correct: 0,
+    explanation: "The lecture describes Economic Botany and Ethnobotany as focusing on practical uses of plants and plant products."
+  },
+  {
+    q: "According to the lecture, human use of plants for food, fiber, medicines, and other purposes has its origin in what?",
+    a: [
+      "Antiquity",
+      "The twentieth century",
+      "The discovery of the microscope",
+      "The development of natural selection"
+    ],
+    correct: 0,
+    explanation: "The lecture states that practical plant uses have their origin in antiquity as humans discovered, used, and eventually cultivated plants."
+  },
+  {
+    q: "Besides being called the Father of Botany in the Philippines, what other distinction is given to Leon Ma. Guerrero in the lecture?",
+    a: [
+      "National Scientist and Father of Pharmacy in the Philippines",
+      "Father of Botany and founder of genetics",
+      "Discoverer of the plant nucleus",
+      "Founder of natural selection"
+    ],
+    correct: 0,
+    explanation: "The lecture identifies Leon Ma. Guerrero as Father of Botany in the Philippines, a National Scientist, and Father of Pharmacy in the Philippines."
+  },
+  {
+    q: "What was Philippus Aureolus Bombastus von Hohenheim's contribution highlighted in the lecture?",
+    a: [
+      "He pioneered the use of minerals and other chemicals in medicine",
+      "He discovered the plant cell nucleus",
+      "He proposed natural selection",
+      "He classified plants by fossil remains"
+    ],
+    correct: 0,
+    explanation: "The lecture credits Hohenheim with pioneering the use of minerals and other chemicals in medicine."
+  },
+  {
+    q: "According to the lecture, Hohenheim's work led to what development in medicine?",
+    a: [
+      "The introduction of chemistry into medicine",
+      "The discovery of cells",
+      "The creation of plant taxonomy",
+      "The development of plant geography"
+    ],
+    correct: 0,
+    explanation: "The lecture states that his work led to the introduction of chemistry into medicine."
+  },
+  {
+    q: "Which statement is part of the quotation attributed to Hohenheim in the lecture?",
+    a: [
+      "In all things there is a poison, and there is nothing without a poison",
+      "All plants are poisonous",
+      "Only minerals can be medicines",
+      "Dose has no effect on toxicity"
+    ],
+    correct: 0,
+    explanation: "The lecture presents the quotation beginning, 'In all things there is a poison, and there is nothing without a poison,' and emphasizes that dose determines whether a poison is poison or not."
+  },
+  {
+    q: "What does the Pen T'sao refer to in the lecture?",
+    a: [
+      "Traditional Chinese medical literature documenting herbal and other medicinal substances",
+      "A classification system for plant fossils",
+      "A theory of natural selection",
+      "A cell theory phrase"
+    ],
+    correct: 0,
+    explanation: "The lecture describes Pen T'sao as traditional Chinese medical literature documenting herbal and other medicinal substances."
+  },
+  {
+    q: "What unusual practice of Shen Nung is described in the lecture?",
+    a: [
+      "Taking in all herbs or applying them to his own body",
+      "Growing vines toward sunlight",
+      "Studying cork cells",
+      "Grouping elements into triads"
+    ],
+    correct: 0,
+    explanation: "The lecture describes Shen Nung as taking in all herbs or applying them to his own body, noting his very resistant stomach even on poisons."
+  },
+  {
+    q: "What did Robert Hooke call the tiny box-like structures he observed in cork?",
+    a: [
+      "Cells",
+      "Nuclei",
+      "Spores",
+      "Stomata"
+    ],
+    correct: 0,
+    explanation: "The lecture says Hooke saw tiny boxes in cork and called them cells."
+  },
+  {
+    q: "Which discovery is specifically attributed to Robert Brown in the lecture?",
+    a: [
+      "The plant cell's nucleus",
+      "The first plant taxonomy system",
+      "The use of minerals in medicine",
+      "The theory of natural selection"
+    ],
+    correct: 0,
+    explanation: "The lecture states that Robert Brown discovered the plant cell's nucleus."
+  },
+  {
+    q: "What does 'omnis cellula e cellula' mean in the context of the lecture?",
+    a: [
+      "Cells come from pre-existing cells",
+      "Seeds are everywhere",
+      "Plants grow toward light",
+      "Life comes from inert matter"
+    ],
+    correct: 0,
+    explanation: "The lecture associates Rudolf Virchow with 'omnis cellula e cellula,' meaning cells arise from pre-existing cells."
+  },
+  {
+    q: "What term does the lecture use for Virchow's view that disease is caused by changes in normal cells?",
+    a: [
+      "Cellular pathology",
+      "Panspermia",
+      "Natural selection",
+      "Phototropism"
+    ],
+    correct: 0,
+    explanation: "The lecture calls this cellular pathology."
+  },
+  {
+    q: "What does the term 'panspermia' literally mean according to the lecture?",
+    a: [
+      "Seeds everywhere",
+      "Life from inert matter",
+      "Survival through reproduction",
+      "Cells from cells"
+    ],
+    correct: 0,
+    explanation: "The lecture states that panspermia means 'seeds everywhere.'"
+  },
+  {
+    q: "According to the panspermia hypothesis in the lecture, how can the 'seeds' of life move?",
+    a: [
+      "They can be propagated through space from one location to another",
+      "They can only move through soil",
+      "They are produced only by plants",
+      "They are formed only inside cells"
+    ],
+    correct: 0,
+    explanation: "The lecture states that the seeds of life can be propagated through space from one location to another."
+  },
+  {
+    q: "What did the spontaneous generation theory claim could happen?",
+    a: [
+      "Some living beings could be created from inert matter without a pre-existing body",
+      "All life must come from extraterrestrial seeds",
+      "Only the fittest organisms reproduce",
+      "All plants reproduce through seeds"
+    ],
+    correct: 0,
+    explanation: "The lecture states that spontaneous generation proposed that some living beings could be created from inert matter without involvement with a pre-existing body."
+  },
+  {
+    q: "According to the lecture, spontaneous generation became adopted as an official doctrine by merging with what?",
+    a: [
+      "Creationist concepts supported by the Church",
+      "Natural selection concepts",
+      "Cell theory",
+      "Plant taxonomy"
+    ],
+    correct: 0,
+    explanation: "The lecture says spontaneous generation became adopted as an official doctrine by merging with creationist concepts supported by the Church."
+  },
+  {
+    q: "What central competition is emphasized in the lecture's description of natural selection?",
+    a: [
+      "Organisms produce more offspring than can survive in their environment",
+      "All organisms survive equally",
+      "Plants reproduce only when conditions are perfect",
+      "Only the largest organisms reproduce"
+    ],
+    correct: 0,
+    explanation: "The lecture states that organisms produce more offspring than can survive in their environment."
+  },
+  {
+    q: "What happens to organisms that are lacking in fitness according to the lecture's natural-selection description?",
+    a: [
+      "They may fail to reach reproductive age or produce fewer offspring",
+      "They always become dominant",
+      "They automatically become larger",
+      "They produce more offspring than fitter organisms"
+    ],
+    correct: 0,
+    explanation: "The lecture states that less-fit organisms may fail to reach reproductive age or produce fewer offspring than their counterparts."
+  },
+  {
+    q: "Why are behavioral adaptations especially useful in fluctuating environments?",
+    a: [
+      "They can provide immediate and flexible responses to short-term environmental changes",
+      "They permanently change plant anatomy",
+      "They prevent all metabolic activity",
+      "They only operate after reproduction"
+    ],
+    correct: 0,
+    explanation: "The lecture emphasizes that behavioral adaptations can be immediate responses, providing flexibility during short-term environmental challenges."
+  },
+  {
+    q: "Which environmental factors are specifically mentioned as rapidly changing and influencing the need for behavioral adaptation?",
+    a: [
+      "Light, water availability, temperature, and predation",
+      "Only soil color and wind speed",
+      "Only gravity and plant height",
+      "Only nutrients and flower color"
+    ],
+    correct: 0,
+    explanation: "The lecture specifically lists light, water availability, temperature, and predation."
+  },
+  {
+    q: "What do behavioral adaptations help plants maximize according to the lecture?",
+    a: [
+      "Available resources, protection from threats, and reproductive success",
+      "Only water uptake",
+      "Only seed size",
+      "Only leaf thickness"
+    ],
+    correct: 0,
+    explanation: "The lecture says behavioral adaptations help plants make the most of resources, protect themselves from threats, and ensure reproductive success."
+  },
+  {
+    q: "Which adaptation category is most directly associated in the lecture with intracellular, biochemical, and metabolic changes?",
+    a: [
+      "Physiological adaptation",
+      "Behavioral adaptation",
+      "Structural adaptation",
+      "Taxonomic adaptation"
+    ],
+    correct: 0,
+    explanation: "The lecture defines physiological adaptations through intracellular, biochemical, and metabolic changes."
+  },
+  {
+    q: "What internal condition are physiological adaptations described as helping maintain?",
+    a: [
+      "Balance regardless of the environment",
+      "Maximum height regardless of light",
+      "Permanent dormancy",
+      "A fixed number of leaves"
+    ],
+    correct: 0,
+    explanation: "The lecture says physiological adaptations help keep the organism in balance regardless of the environment."
+  },
+  {
+    q: "What major survival benefit of physiological adaptations is listed in the lecture?",
+    a: [
+      "Survival of species in their ecological niches",
+      "Elimination of all environmental stress",
+      "Prevention of reproduction",
+      "Removal of all stomata"
+    ],
+    correct: 0,
+    explanation: "The lecture states that physiological adaptations aid the survival of species in their ecological niches."
+  },
+  {
+    q: "Which set contains functions/significance specifically listed for physiological adaptations?",
+    a: [
+      "Management of body temperature, pressure, ionic balances, and metabolic rates",
+      "Formation of spines, hairs, and petals",
+      "Naming and classifying plant organisms",
+      "Fossil preservation and plant distribution"
+    ],
+    correct: 0,
+    explanation: "The lecture lists management of body temperature, pressure, ionic balances, and metabolic rates as a significance of physiological adaptations."
+  },
+  {
+    q: "What resource-related benefit of physiological adaptations is listed in the lecture?",
+    a: [
+      "Resource conservation and maximization",
+      "Elimination of nutrient uptake",
+      "Permanent water loss",
+      "Prevention of photosynthesis"
+    ],
+    correct: 0,
+    explanation: "The lecture lists resource conservation and maximization as a significance of physiological adaptations."
+  },
+  {
+    q: "Which plant structures are specifically named as possible locations of structural adaptations?",
+    a: [
+      "Leaves, stems, roots, and reproductive structures",
+      "Only leaves and flowers",
+      "Only roots and stems",
+      "Only reproductive cells"
+    ],
+    correct: 0,
+    explanation: "The lecture specifically lists leaves, stems, roots, and reproductive structures."
+  },
+  {
+    q: "Which environmental challenges are specifically listed as challenges addressed by structural adaptations?",
+    a: [
+      "Water scarcity, extreme temperatures, poor soil conditions, and predation",
+      "Only sunlight and gravity",
+      "Only rainfall and wind",
+      "Only soil acidity"
+    ],
+    correct: 0,
+    explanation: "The lecture lists water scarcity, extreme temperatures, poor soil conditions, and predation."
+  },
+  {
+    q: "Besides helping plants survive, what major outcome do structural adaptations help ensure?",
+    a: [
+      "Reproduction and continuation of the species",
+      "Permanent dormancy",
+      "Loss of resources",
+      "Reduction of plant diversity"
+    ],
+    correct: 0,
+    explanation: "The lecture states that structural adaptations are crucial for survival and reproduction and help ensure continuation of the species."
+  },
+  {
+    q: "Which benefit of structural adaptations is specifically associated with herbivores in the lecture?",
+    a: [
+      "Defending against herbivores",
+      "Attracting only herbivores",
+      "Increasing herbivore feeding",
+      "Removing all plant defenses"
+    ],
+    correct: 0,
+    explanation: "The lecture states that structural adaptations help plants defend against herbivores."
+  },
+  {
+    q: "According to the lecture, structural adaptations help plants occupy which range of habitats?",
+    a: [
+      "Diverse habitats including deserts, wetlands, forests, and mountains",
+      "Only deserts",
+      "Only wetlands",
+      "Only forests"
+    ],
+    correct: 0,
+    explanation: "The lecture explicitly mentions deserts, wetlands, forests, and mountains as diverse habitats occupied with the help of structural adaptations."
+  }
+];
 const periodic = [{"q": "Who proposed the Modern Periodic Law, arranging elements in increasing order of atomic number?", "a": ["Henry Moseley", "Dmitri Mendeleev", "John Newlands", "Jöns Jakob Berzelius"], "correct": 0, "explanation": "Henry Moseley proposed the Modern Periodic Law, so the modern table is arranged by increasing atomic number rather than atomic weight.", "whyWrong": "Henry Moseley proposed the Modern Periodic Law, so the modern table is arranged by increasing atomic number rather than atomic weight."}, {"q": "What are the horizontal rows of the periodic table called?", "a": ["Groups", "Periods", "Blocks", "Families"], "correct": 1, "explanation": "The horizontal rows are called periods. Groups or families are the vertical columns.", "whyWrong": "The horizontal rows are called periods. Groups or families are the vertical columns."}, {"q": "What do elements within the same group generally share?", "a": ["The same atomic mass", "The same outer electron arrangement / valence-electron structure", "The same number of neutrons", "The same period number"], "correct": 1, "explanation": "Elements in the same group have the same outer-electron or valence-electron arrangement, which gives them similar chemical properties.", "whyWrong": "Elements in the same group have the same outer-electron or valence-electron arrangement, which gives them similar chemical properties."}, {"q": "What do the vertical columns of the periodic table represent?", "a": ["Periods", "Groups or families", "Atomic mass only", "Energy levels only"], "correct": 1, "explanation": "The vertical columns represent groups or families. Elements within a group share an outer-electron arrangement and similar chemical properties.", "whyWrong": "The vertical columns represent groups or families. Elements within a group share an outer-electron arrangement and similar chemical properties."}, {"q": "As you move across a period from left to right, atomic number generally:", "a": ["Increases", "Decreases", "Stays constant", "Becomes zero"], "correct": 0, "explanation": "Atomic number increases from left to right across a period. Each next element has one more proton than the previous element.", "whyWrong": "Atomic number increases from left to right across a period. Each next element has one more proton than the previous element."}, {"q": "The period number of an element signifies the:", "a": ["Number of valence electrons", "Highest unexcited energy level for an electron", "Number of neutrons", "Number of isotopes"], "correct": 1, "explanation": "The period number indicates the highest unexcited energy level occupied by an electron in that element.", "whyWrong": "The period number indicates the highest unexcited energy level occupied by an electron in that element."}, {"q": "Elements in the same group have similar chemical properties mainly because they have the same:", "a": ["Atomic mass", "Valence-electron arrangement", "Number of periods", "Number of isotopes"], "correct": 1, "explanation": "The valence-electron arrangement is the key similarity. Elements with the same outer-electron arrangement tend to have similar chemical properties.", "whyWrong": "The valence-electron arrangement is the key similarity. Elements with the same outer-electron arrangement tend to have similar chemical properties."}, {"q": "noble gases are found in:", "a": ["Group IA", "Group IIA", "Group VIIA", "Group VIII"], "correct": 3, "explanation": "Noble gases are in Group VIII. They have stable outer electron arrangements, which is why they are relatively unreactive.", "whyWrong": "Noble gases are in Group VIII. They have stable outer electron arrangements, which is why they are relatively unreactive."}, {"q": "Ionization energy is the energy required to:", "a": ["Add a neutron to an atom", "Remove an electron from an atom or ion", "Melt an element", "Form a nucleus"], "correct": 1, "explanation": "Ionization energy is the energy needed to remove an electron from an atom or ion.", "whyWrong": "Ionization energy is the energy needed to remove an electron from an atom or ion."}, {"q": "Electronegativity describes an atom's ability to:", "a": ["Attract electrons in a chemical compound", "Lose all of its neutrons", "Increase its atomic mass", "Emit visible light"], "correct": 0, "explanation": "Electronegativity is an atom's ability to attract electrons in a chemical compound. Fluorine has the strongest attraction for shared electrons.", "whyWrong": "Electronegativity is an atom's ability to attract electrons in a chemical compound. Fluorine has the strongest attraction for shared electrons."}, {"q": "Which element is identified in the lecture as having atoms that most strongly attract shared electrons?", "a": ["Oxygen", "Chlorine", "Fluorine", "Nitrogen"], "correct": 2, "explanation": "Fluorine most strongly attracts shared electrons. Oxygen, chlorine, and nitrogen are also electronegative, but fluorine is the strongest.", "whyWrong": "Fluorine most strongly attracts shared electrons. Oxygen, chlorine, and nitrogen are also electronegative, but fluorine is the strongest."}, {"q": "Moving from left to right across the periodic table, atomic radius generally:", "a": ["Increases", "Decreases", "Stays constant", "First increases then decreases"], "correct": 1, "explanation": "Atomic radius decreases from left to right. The opposite trend—an increase—occurs from top to bottom.", "whyWrong": "Atomic radius decreases from left to right. The opposite trend—an increase—occurs from top to bottom."}, {"q": "Moving from left to right across the periodic table, metallic character generally:", "a": ["Increases", "Decreases", "Stays constant", "Disappears immediately"], "correct": 1, "explanation": "Metallic character decreases from left to right, as the elements become less metallic and more nonmetallic across a period.", "whyWrong": "Metallic character decreases from left to right, as the elements become less metallic and more nonmetallic across a period."}, {"q": "Moving from left to right across the periodic table, ionization energy generally:", "a": ["Increases", "Decreases", "Stays constant", "Becomes zero"], "correct": 0, "explanation": "Ionization energy increases from left to right. Electrons become more difficult to remove across a period.", "whyWrong": "Ionization energy increases from left to right. Electrons become more difficult to remove across a period."}, {"q": "Moving from top to bottom within a group, atomic radius generally:", "a": ["Decreases", "Increases", "Stays constant", "Alternates"], "correct": 1, "explanation": "Atomic radius increases down a group because additional principal energy levels are added.", "whyWrong": "Atomic radius increases down a group because additional principal energy levels are added."}, {"q": "Moving from top to bottom within a group, ionization energy generally:", "a": ["Increases", "Decreases", "Stays constant", "Doubles"], "correct": 1, "explanation": "Ionization energy decreases down a group because additional energy levels increase shielding and make the outer electrons less tightly bound.", "whyWrong": "Ionization energy decreases down a group because additional energy levels increase shielding and make the outer electrons less tightly bound."}, {"q": "Moving from top to bottom within a group, electronegativity generally:", "a": ["Increases", "Decreases", "Stays constant", "Becomes exactly one"], "correct": 1, "explanation": "Electronegativity decreases down a group. Additional energy levels increase shielding, reducing the attraction for shared electrons.", "whyWrong": "Electronegativity decreases down a group. Additional energy levels increase shielding, reducing the attraction for shared electrons."}, {"q": "Which set is listed in the lecture as metalloids?", "a": ["B, Si, Ge, As, Sb, Te, At", "Li, Na, K, Rb, Cs, Fr", "He, Ne, Ar, Kr, Xe, Rn", "Fe, Co, Ni, Cu, Zn, Ag"], "correct": 0, "explanation": "The listed metalloids are B, Si, Ge, As, Sb, Te, and At. Metalloids have characteristics between metals and nonmetals.", "whyWrong": "The listed metalloids are B, Si, Ge, As, Sb, Te, and At. Metalloids have characteristics between metals and nonmetals."}, {"q": "Metalloids are described as useful in electronics because they are:", "a": ["Perfect insulators", "Semiconductors of electricity", "Highly reactive liquids", "Noble gases"], "correct": 1, "explanation": "Metalloids are semiconductors of electricity, which makes them useful in electronic equipment such as computer chips and solar batteries.", "whyWrong": "Metalloids are semiconductors of electricity, which makes them useful in electronic equipment such as computer chips and solar batteries."}, {"q": "Which group is identified as the alkali metals?", "a": ["Group IA", "Group IIA", "Group VIIA", "Group VIIIA"], "correct": 0, "explanation": "Group IA contains the alkali metals: Li, Na, K, Rb, Cs, and Fr.", "whyWrong": "Group IA contains the alkali metals: Li, Na, K, Rb, Cs, and Fr."}, {"q": "Which elements are listed as the Group IA alkali metals?", "a": ["Li, Na, K, Rb, Cs, Fr", "Be, Mg, Ca, Sr, Ba, Ra", "F, Cl, Br, I, At", "He, Ne, Ar, Kr, Xe, Rn"], "correct": 0, "explanation": "The Group IA alkali metals are Li, Na, K, Rb, Cs, and Fr.", "whyWrong": "The Group IA alkali metals are Li, Na, K, Rb, Cs, and Fr."}, {"q": "In the lecture, the alkali metals' reactivity generally:", "a": ["Decreases down the group", "Increases down the group from lithium to cesium", "Never changes", "Is highest only for lithium"], "correct": 1, "explanation": "Alkali-metal reactivity increases down the group from lithium to cesium.", "whyWrong": "Alkali-metal reactivity increases down the group from lithium to cesium."}, {"q": "Which element was discovered through scientific inquiry by Hennig Brand in 1649?", "a": ["Phosphorus", "Lithium", "Sodium", "Hydrogen"], "correct": 0, "explanation": "Phosphorus was the first element identified through scientific inquiry by Hennig Brand in 1649.", "whyWrong": "Phosphorus was the first element identified through scientific inquiry by Hennig Brand in 1649."}, {"q": "Who proposed a system of chemical symbols based on the first letter of an element's name and sometimes its Latin name?", "a": ["Jöns Jakob Berzelius", "Henry Moseley", "Glenn Seaborg", "John Newlands"], "correct": 0, "explanation": "Jöns Jakob Berzelius proposed the chemical-symbol system based on the first letter of an element's name and, in some cases, its Latin name.", "whyWrong": "Jöns Jakob Berzelius proposed the chemical-symbol system based on the first letter of an element's name and, in some cases, its Latin name."}, {"q": "Who arranged elements into groups of three called triads?", "a": ["Johann Dobereiner", "Antoine Lavoisier", "Dmitri Mendeleev", "Glenn Seaborg"], "correct": 0, "explanation": "Johann Dobereiner grouped elements with similar properties into triads. The middle element had properties that were an average of the other two.", "whyWrong": "Johann Dobereiner grouped elements with similar properties into triads. The middle element had properties that were an average of the other two."}, {"q": "John Newlands proposed the:", "a": ["Law of Octaves", "Modern Periodic Law", "Diagonal Rule", "Law of Conservation"], "correct": 0, "explanation": "John Newlands proposed the Law of Octaves, which described a repeating pattern of chemical properties every eighth element.", "whyWrong": "John Newlands proposed the Law of Octaves, which described a repeating pattern of chemical properties every eighth element."}, {"q": "Who predicted the existence and properties of unknown elements such as eka-aluminum, eka-boron, and eka-silicon?", "a": ["Henry Moseley", "Dmitri Mendeleev", "Glenn Seaborg", "Antoine Lavoisier"], "correct": 1, "explanation": "Dmitri Mendeleev predicted these unknown elements and their properties. Moseley is associated with arranging elements by atomic number, while Seaborg is associated with the transuranium elements and the actinide series.", "whyWrong": "Dmitri Mendeleev predicted these unknown elements and their properties. Moseley is associated with arranging elements by atomic number, while Seaborg is associated with the transuranium elements and the actinide series."}, {"q": "Which elements were later found to fit Mendeleev's predictions for eka-aluminum, eka-boron, and eka-silicon?", "a": ["Gallium, scandium, and germanium", "Lithium, sodium, and potassium", "Fluorine, chlorine, and bromine", "Iron, cobalt, and nickel"], "correct": 0, "explanation": "Gallium, scandium, and germanium were later found to fit Mendeleev's predictions for eka-aluminum, eka-boron, and eka-silicon.", "whyWrong": "Gallium, scandium, and germanium were later found to fit Mendeleev's predictions for eka-aluminum, eka-boron, and eka-silicon."}, {"q": "Glenn Seaborg discovered transuranium elements with atomic numbers:", "a": ["1 to 10", "11 to 20", "94 to 102", "113 to 118"], "correct": 2, "explanation": "Seaborg discovered transuranium elements with atomic numbers 94 through 102.", "whyWrong": "Seaborg discovered transuranium elements with atomic numbers 94 through 102."}, {"q": "The completion of the actinide series allowed Seaborg to redesign the periodic table by placing the lanthanide and actinide series:", "a": ["Above hydrogen", "Below the rest of the table", "Inside Group VIII only", "In the noble-gas column"], "correct": 1, "explanation": "The lanthanide and actinide series were placed below the main table to keep the periodic table from becoming too wide.", "whyWrong": "The lanthanide and actinide series were placed below the main table to keep the periodic table from becoming too wide."}, {"q": "Which four elements were named by IUPAC as the newly discovered elements listed in the lecture?", "a": ["Nihonium, Moscovium, Tennessine, Oganesson", "Gallium, Scandium, Germanium, Francium", "Lithium, Sodium, Potassium, Rubidium", "Hydrogen, Helium, Lithium, Beryllium"], "correct": 0, "explanation": "The four named elements are Nihonium (Nh), Moscovium (Mc), Tennessine (Ts), and Oganesson (Og).", "whyWrong": "The four named elements are Nihonium (Nh), Moscovium (Mc), Tennessine (Ts), and Oganesson (Og)."}, {"q": "Nihonium (Nh) is element number:", "a": ["113", "115", "117", "118"], "correct": 0, "explanation": "Nihonium (Nh) is atomic number 113.", "whyWrong": "Nihonium (Nh) is atomic number 113."}, {"q": "Moscovium (Mc) is element number:", "a": ["113", "115", "117", "118"], "correct": 1, "explanation": "Moscovium (Mc) is atomic number 115.", "whyWrong": "Moscovium (Mc) is atomic number 115."}, {"q": "Tennessine (Ts) is element number:", "a": ["113", "115", "117", "118"], "correct": 2, "explanation": "Tennessine (Ts) is atomic number 117.", "whyWrong": "Tennessine (Ts) is atomic number 117."}, {"q": "Oganesson (Og) is element number:", "a": ["113", "115", "117", "118"], "correct": 3, "explanation": "Oganesson (Og) is atomic number 118.", "whyWrong": "Oganesson (Og) is atomic number 118."}, {"q": "The s-block elements have valence configurations described in the lecture as:", "a": ["s¹ or s²", "s²p⁶ only", "d¹ to d¹⁰", "f¹ to f¹⁴"], "correct": 0, "explanation": "The s-block has valence configurations of s¹ or s². The s²p⁶ pattern belongs to a different electron-block description.", "whyWrong": "The s-block has valence configurations of s¹ or s². The s²p⁶ pattern belongs to a different electron-block description."}, {"q": "The p-block elements have valence configurations described as:", "a": ["s²p¹ to s²p⁶", "s¹ only", "d¹ to d¹⁰", "f¹ to f¹⁴"], "correct": 0, "explanation": "The p-block has valence configurations from s²p¹ to s²p⁶.", "whyWrong": "The p-block has valence configurations from s²p¹ to s²p⁶."}, {"q": "Which element is described as the lightest of all metals?", "a": ["Sodium", "Lithium", "Potassium", "Magnesium"], "correct": 1, "explanation": "Lithium is the lightest of all metals.", "whyWrong": "Lithium is the lightest of all metals."}, {"q": "Which ion is described as the predominant cation in intracellular fluid?", "a": ["Na⁺", "K⁺", "Li⁺", "H⁺"], "correct": 1, "explanation": "Potassium (K⁺) is the predominant cation in intracellular fluid.", "whyWrong": "Potassium (K⁺) is the predominant cation in intracellular fluid."}, {"q": "Which ion is described as the most abundant extracellular cation?", "a": ["K⁺", "Na⁺", "Li⁺", "NH₄⁺"], "correct": 1, "explanation": "Sodium (Na⁺) is the most abundant extracellular cation and is the predominant ion in extracellular fluid.", "whyWrong": "Sodium (Na⁺) is the most abundant extracellular cation and is the predominant ion in extracellular fluid."}, {"q": "Sodium is described in the lecture as important for:", "a": ["Neuronal transmission, muscle contraction, and osmoregulation", "Only bone formation", "Only vision", "Only digestion"], "correct": 0, "explanation": "Sodium is important for neuronal function and nerve-impulse transmission, muscle contraction, and osmoregulation.", "whyWrong": "Sodium is important for neuronal function and nerve-impulse transmission, muscle contraction, and osmoregulation."}, {"q": "Potassium deficiency is associated in the lecture with:", "a": ["Hypokalemia and muscle weakness", "Hyperglycemia only", "Anemia only", "Hearing loss only"], "correct": 0, "explanation": "Potassium deficiency causes hypokalemia and can lead to muscle weakness.", "whyWrong": "Potassium deficiency causes hypokalemia and can lead to muscle weakness."}, {"q": "Hydrogen is described as the:", "a": ["Heaviest element", "Lightest of all elements", "Only noble gas", "Only metal in Group IA"], "correct": 1, "explanation": "Hydrogen is the lightest of all elements.", "whyWrong": "Hydrogen is the lightest of all elements."}, {"q": "Which hydrogen isotope is the most abundant?", "a": ["Protium", "Deuterium", "Tritium", "None of them"], "correct": 0, "explanation": "Protium is the most abundant isotope of hydrogen. Deuterium and tritium are the heavier isotopes.", "whyWrong": "Protium is the most abundant isotope of hydrogen. Deuterium and tritium are the heavier isotopes."}, {"q": "Which hydrogen isotope is described as unstable?", "a": ["Protium", "Deuterium", "Tritium", "Hydrogen-4"], "correct": 2, "explanation": "Tritium is unstable. Deuterium and protium are the other hydrogen isotopes described.", "whyWrong": "Tritium is unstable. Deuterium and protium are the other hydrogen isotopes described."}, {"q": "Water fit to drink is called:", "a": ["Mineral water", "Potable water", "Saline water", "Sulfur water"], "correct": 1, "explanation": "Water that is fit to drink is called potable water.", "whyWrong": "Water that is fit to drink is called potable water."}, {"q": "Temporary hardness of water is associated with soluble:", "a": ["Calcium or magnesium bicarbonates", "Sodium chloride only", "Iron oxides only", "Ammonia only"], "correct": 0, "explanation": "Temporary hardness is caused by soluble calcium or magnesium bicarbonates.", "whyWrong": "Temporary hardness is caused by soluble calcium or magnesium bicarbonates."}, {"q": "Permanent hardness of water is caused by sulfates, chlorides, or hydroxides of:", "a": ["Calcium and/or magnesium", "Sodium only", "Hydrogen only", "Potassium only"], "correct": 0, "explanation": "Permanent hardness is caused by sulfates, chlorides, or hydroxides of calcium and/or magnesium.", "whyWrong": "Permanent hardness is caused by sulfates, chlorides, or hydroxides of calcium and/or magnesium."}, {"q": "E. coli in water can cause:", "a": ["Traveler's diarrhea", "Hypokalemia", "Acidosis", "Anemia"], "correct": 0, "explanation": "E. coli in water can cause diarrhea, including traveler's diarrhea.", "whyWrong": "E. coli in water can cause diarrhea, including traveler's diarrhea."}, {"q": "Ammonia is described as a colorless gas with a:", "a": ["Strong, pungent odor", "Sweet fruity odor", "Completely odorless character", "Metallic odor"], "correct": 0, "explanation": "Ammonia is a colorless gas with a strong, pungent characteristic odor.", "whyWrong": "Ammonia is a colorless gas with a strong, pungent characteristic odor."}, {"q": "Ammonia is described as a:", "a": ["Respiratory stimulant", "Noble gas", "Heavy metal", "Halogen"], "correct": 0, "explanation": "Ammonia is described as a respiratory stimulant.", "whyWrong": "Ammonia is described as a respiratory stimulant."}];
 
 /*
@@ -155,9 +1374,13 @@ let topic='', quizType=0, questions=[], current=0, score=0, answered=false, iden
 
 function show(id){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active')}
 function goHome(){show('home')}
+function openSubject(subject){
+  if(subject==='inorganic') show('inorganicSubjects');
+  else if(subject==='botany') show('botanySubjects');
+}
 function chooseTopic(t){
   topic=t;
-  document.getElementById('topicCrumb').textContent=t==='lab'?'🔬 Lab Apparatus':'⚛️ Periodic Table';
+  document.getElementById('topicCrumb').textContent=t==='lab'?'🔬 Lab Apparatus':t==='periodic'?'⚛️ Periodic Table':'🌿 Introduction to Botany';
   document.getElementById('functionQuizBtn').style.display=t==='lab'?'':'none';
   document.getElementById('mixedQuizBtn').style.display=t==='lab'?'':'none';
   document.getElementById('periodicExplorerBtn').style.display=t==='periodic'?'':'none';
@@ -169,7 +1392,7 @@ function choose(arr,n){return shuffle(arr).slice(0,n)}
 
 function showIdentificationLevels(){
   document.getElementById('identificationCrumb').textContent=
-    topic==='lab'?'🔬 Lab Apparatus':'⚛️ Periodic Table';
+    topic==='lab'?'🔬 Lab Apparatus':topic==='periodic'?'⚛️ Periodic Table':'🌿 Introduction to Botany';
   show('identificationLevels');
 }
 
@@ -181,13 +1404,16 @@ function startIdentification(level){
   if(topic==='periodic'){
     if(level==='easy') questions=shuffle(periodic).map(makePeriodicEasyQuestion);
     else questions=shuffle(periodic).map(makePeriodicIdentificationQuestion);
+  }else if(topic==='botany'){
+    if(level==='easy') questions=shuffle(botany).map(makeBotanyEasyQuestion);
+    else questions=shuffle(botany).map(makeBotanyIdentificationQuestion);
   }else{
     const pool=shuffle(apparatus);
     questions=pool.map(x=> level==='easy' ? makePictureQuestion(x) : makeIdentificationQuestion(x));
   }
 
   document.getElementById('quizTitle').textContent=
-    (topic==='lab'?'🔬 Lab Apparatus':'⚛️ Periodic Table')+' • Identification • '+
+    (topic==='lab'?'🔬 Lab Apparatus':topic==='periodic'?'⚛️ Periodic Table':'🌿 Introduction to Botany')+' • Identification • '+
     (level==='easy'?'Easy':'Hard');
 
   show('quiz'); render();
@@ -198,6 +1424,8 @@ function startQuiz(type){
 
   if(topic==='periodic'){
     questions=shuffle(periodic).map(makePeriodicEasyQuestion);
+  }else if(topic==='botany'){
+    questions=shuffle(botany).map(makeBotanyEasyQuestion);
   }else{
     const pool=shuffle(apparatus);
     if(type===0){
@@ -440,6 +1668,8 @@ function makeIdentificationQuestion(x){
 }
 function makePeriodicEasyQuestion(x){ return {kind:'review', q:x.q, answers:shuffle(x.a), correct:x.a[x.correct], explanation:x.explanation}; }
 function makePeriodicIdentificationQuestion(x){ return {kind:'periodicIdentification', q:x.q, correct:x.a[x.correct], explanation:x.explanation}; }
+function makeBotanyEasyQuestion(x){ return {kind:'review', q:x.q, answers:shuffle(x.a), correct:x.a[x.correct], explanation:x.explanation}; }
+function makeBotanyIdentificationQuestion(x){ return {kind:'botanyIdentification', q:x.q, correct:x.a[x.correct], explanation:x.explanation}; }
 function render(){
   answered=false;
   const q=questions[current];
@@ -458,7 +1688,7 @@ function render(){
   }else if(q.kind==='identification'){
     document.getElementById('question').innerHTML=`<h2>${q.prompt}</h2>`;
     document.getElementById('imageWrap').innerHTML=`<img class="quizimg" src="${q.image}" alt="Laboratory apparatus" onerror="this.outerHTML='<div class=&quot;missing&quot;>📷 Picture not found yet.<br><br>Add your image at:<br><b>${q.image}</b></div>'">`;
-  }else if(q.kind==='periodicIdentification'){
+  }else if(q.kind==='periodicIdentification' || q.kind==='botanyIdentification'){
     document.getElementById('question').innerHTML=`<h2>${q.q}</h2>`;
     document.getElementById('imageWrap').innerHTML='';
   }else if(q.kind==='function'){
@@ -475,7 +1705,7 @@ function render(){
   }
 
   const box=document.getElementById('answers'); box.innerHTML='';
-  if(q.kind==='identification' || q.kind==='periodicIdentification'){
+  if(q.kind==='identification' || q.kind==='periodicIdentification' || q.kind==='botanyIdentification'){
     const input=document.createElement('input');
     input.className='identification-input'; input.id='identificationInput'; input.type='text';
     input.placeholder='Type your answer here'; input.autocomplete='off';
