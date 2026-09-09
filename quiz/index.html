@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PharmLab Quiz — Corrected</title>
+<title>PharmLab Quiz</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(135deg,#eef5ff,#f8f3ff);color:#172033;min-height:100vh}
@@ -36,6 +36,52 @@ code{background:#eef1f7;padding:2px 6px;border-radius:5px}
 .apparatus-modal{display:none;position:fixed;inset:0;background:rgba(23,32,51,.72);z-index:1000;align-items:center;justify-content:center;padding:24px}.apparatus-modal.show{display:flex}.apparatus-modal-content{position:relative;background:#fff;border-radius:22px;padding:22px;max-width:760px;width:min(760px,100%);max-height:90vh;overflow:auto;box-shadow:0 18px 50px rgba(0,0,0,.25);text-align:center}.apparatus-modal-content img{max-width:100%;max-height:62vh;object-fit:contain;border-radius:16px;background:#f8fafc;border:1px solid #e2e6ed;padding:10px}.apparatus-modal-name{font-size:24px;font-weight:800;margin:14px 0 7px}.apparatus-modal-function{color:#667085;line-height:1.55}.apparatus-modal-close{position:absolute;right:14px;top:12px;width:38px;height:38px;border:0;border-radius:50%;background:#f0f2f7;color:#27304a;font-size:24px;line-height:1}.apparatus-card:focus-visible{outline:3px solid #5967d9;outline-offset:3px}
 .element-info{background:#f5f7ff;border-left:5px solid #5967d9;border-radius:12px;padding:16px;margin:15px 0 20px;line-height:1.5;min-height:70px}.periodic-grid{display:grid;grid-template-columns:repeat(18,minmax(34px,1fr));gap:5px;overflow:auto;padding-bottom:8px}.el{border:1px solid #d9deea;border-radius:8px;padding:7px 3px;background:#fff;text-align:center;min-height:62px;transition:.15s}.el:hover{transform:translateY(-2px);border-color:#5967d9;background:#f7f8ff}.el .z{font-size:10px;color:#667085}.el .sym{font-size:18px;font-weight:800}.el .name{font-size:9px;color:#667085;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.spacer{min-height:1px}@media(max-width:800px){.periodic-grid{grid-template-columns:repeat(18,45px)}}
 @media(max-width:650px){.answers{grid-template-columns:1fr}.title{font-size:32px}.card{padding:20px}.quizimg,.missing{height:300px}}
+
+/* Random wrong-answer meme */
+.meme-reaction-card{
+  position:fixed;
+  z-index:9999;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  padding:18px;
+  width:min(620px,82vw);
+  max-height:82vh;
+  overflow:auto;
+  border-radius:20px;
+  background:var(--card,#fff);
+  border:2px solid rgba(0,0,0,.12);
+  box-shadow:0 20px 60px rgba(0,0,0,.35);
+  text-align:center;
+}
+.meme-reaction-card .meme-phrase{
+  font-size:1.2rem;
+  font-weight:850;
+  margin:4px 35px 14px;
+}
+.meme-reaction-card img{
+  display:block;
+  width:auto;
+  max-width:100%;
+  max-height:58vh;
+  margin:0 auto;
+  border-radius:14px;
+  object-fit:contain;
+}
+.meme-close{
+  position:absolute;
+  top:8px;
+  right:10px;
+  width:34px;
+  height:34px;
+  border:0;
+  border-radius:50%;
+  background:#eef0f5;
+  font-size:20px;
+  font-weight:800;
+  cursor:pointer;
+}
+.meme-close:hover{background:#e2e5ec}
 </style>
 </head>
 <body>
@@ -48,7 +94,7 @@ code{background:#eef1f7;padding:2px 6px;border-radius:5px}
 <div class="grid">
 <button class="topic" onclick="openSubject('inorganic')"><div class="icon">⚗️</div><h3>Pharmaceutical Inorganic Chemistry</h3><p>Periodic Table and Laboratory Apparatus.</p></button>
 <button class="topic" onclick="openSubject('botany')"><div class="icon">🌿</div><h3>Pharmaceutical Botany and Taxonomy</h3><p>Introduction to Botany based on your lecture PDF.</p></button>
-<div class="topic" style="cursor:default;opacity:.78"><div class="icon">🧮</div><h3>Pharmaceutical Calculations</h3><p><b>Coming Soon</b> — quiz content will be added later.</p></div>
+<button class="topic" onclick="openSubject('calculations')"><div class="icon">🧮</div><h3>Pharmaceutical Calculations</h3><p>Conversions across SI, Apothecaries, and Avoirdupois systems.</p></button>
 </div>
 </div>
 </section>
@@ -71,6 +117,130 @@ code{background:#eef1f7;padding:2px 6px;border-radius:5px}
 <div class="grid">
 <button class="topic" onclick="chooseTopic('botany')"><div class="icon">🌱</div><h3>Introduction to Botany</h3><p>Branches of botany, early botanists, origin of life, evolution, and plant adaptation.</p></button>
 </div>
+</div>
+</section>
+
+<section id="calculationSubjects" class="screen">
+<div class="card">
+<div class="topbar"><span class="crumb">🧮 Pharmaceutical Calculations</span><button class="secondary" onclick="goHome()">← Subjects</button></div>
+<h2>Choose a topic</h2>
+<div class="grid">
+<button class="quiztype" onclick="openCalculationNotes()"><div class="icon">📚</div><h3>Conversion Notes</h3><p>Study SI, Apothecaries, and Avoirdupois units and their common equivalents.</p></button>
+<button class="quiztype" onclick="startCalculationQuiz()"><div class="icon">🧠</div><h3>Conversion Quiz</h3><p>Solve practice problems using the conversion methods shown in the notes.</p></button>
+</div>
+</div>
+</section>
+
+<section id="calculationNotes" class="screen">
+<div class="card">
+<div class="topbar"><span class="crumb">🧮 Pharmaceutical Calculations • Conversion Notes</span><button class="secondary" onclick="show('calculationSubjects')">← Calculations</button></div>
+<h2>Pharmaceutical Calculations — Complete Unit Conversions</h2>
+<p class="small">Common pharmacy conversion relationships. Use the exact factor required by your instructor or textbook if a problem specifies one.</p>
+
+
+<details open><summary><b>0. Calculation Methods / Formulas</b></summary><div class="notes-content">
+<style>
+.formula-visual{display:grid;gap:16px;margin:14px 0 8px}
+.formula-card{border:1px solid #dfe3ee;border-radius:16px;padding:16px;background:#f8f9fd}
+.formula-name{font-weight:800;font-size:17px;margin-bottom:12px}
+.formula-row{display:flex;align-items:center;justify-content:center;gap:9px;flex-wrap:wrap}
+.formula-box{background:#fff;border:2px solid #cfd5e3;border-radius:11px;padding:10px 13px;text-align:center;font-weight:700;min-width:105px}
+.formula-arrow{font-size:22px;font-weight:900}
+.formula-stack{display:flex;flex-direction:column;align-items:center;min-width:145px}
+.formula-line{height:2px;background:#1f2a44;width:100%;margin:5px 0}
+.formula-small{font-size:12px;color:#667085;text-align:center;margin-top:8px}
+.cancel{text-decoration:line-through;text-decoration-thickness:2px}
+</style>
+
+<div class="formula-visual">
+
+  <div class="formula-card">
+    <div class="formula-name">① Proportion / Ratio</div>
+    <div class="formula-row">
+      <div class="formula-stack">
+        <div>Known quantity</div><div class="formula-line"></div><div>Known equivalent</div>
+      </div>
+      <div class="formula-arrow">=</div>
+      <div class="formula-stack">
+        <div>Desired quantity</div><div class="formula-line"></div><div><b>X</b></div>
+      </div>
+    </div>
+    <div class="formula-small">Cross multiply → solve for X</div>
+  </div>
+
+  <div class="formula-card">
+    <div class="formula-name">② Dimensional Analysis / Factor-Label</div>
+    <div class="formula-row">
+      <div class="formula-box">Given<br>amount</div>
+      <div class="formula-arrow">×</div>
+      <div class="formula-stack">
+        <div>Desired unit</div><div class="formula-line"></div><div>Given unit</div>
+      </div>
+      <div class="formula-arrow">×</div>
+      <div class="formula-stack">
+        <div>Next unit</div><div class="formula-line"></div><div>Previous unit</div>
+      </div>
+      <div class="formula-arrow">→</div>
+      <div class="formula-box">Answer</div>
+    </div>
+    <div class="formula-small"><span class="cancel">unwanted units cancel</span> → desired unit remains</div>
+  </div>
+
+  <div class="formula-card">
+    <div class="formula-name">③ Multi-Step Conversion</div>
+    <div class="formula-row">
+      <div class="formula-box">3 L</div>
+      <div class="formula-arrow">×</div>
+      <div class="formula-stack">
+        <div>1,000 mL</div><div class="formula-line"></div><div>1 L</div>
+      </div>
+      <div class="formula-arrow">×</div>
+      <div class="formula-stack">
+        <div>1,000 µL</div><div class="formula-line"></div><div>1 mL</div>
+      </div>
+      <div class="formula-arrow">→</div>
+      <div class="formula-box">3,000,000 µL</div>
+    </div>
+  </div>
+
+  <div class="formula-card">
+    <div class="formula-name">④ Basic Conversion</div>
+    <div class="formula-row">
+      <div class="formula-box">Given amount</div>
+      <div class="formula-arrow">×</div>
+      <div class="formula-box">Conversion factor</div>
+      <div class="formula-arrow">=</div>
+      <div class="formula-box">Desired amount</div>
+    </div>
+  </div>
+
+</div>
+</div></details>
+
+
+<details open><summary><b>1. SI / Metric System</b></summary><div class="notes-content">
+<p><b>Mass</b></p><ul><li>1 kg = 1,000 g</li><li>1 g = 1,000 mg</li><li>1 mg = 1,000 mcg (µg)</li><li>1 kg = 1,000,000 mg</li><li>1 g = 1,000,000 mcg</li></ul>
+<p><b>Volume</b></p><ul><li>1 L = 1,000 mL</li><li>1 mL = 1,000 µL</li><li>1 L = 1,000,000 µL</li></ul>
+<p><b>Length</b></p><ul><li>1 m = 100 cm = 1,000 mm</li><li>1 cm = 10 mm</li><li>1 km = 1,000 m</li></ul>
+<p><b>Common prefixes:</b> kilo = 10³, hecto = 10², deka = 10¹, base = 10⁰, deci = 10⁻¹, centi = 10⁻², milli = 10⁻³, micro = 10⁻⁶.</p>
+</div></details>
+<details><summary><b>2. Apothecaries System — Weight</b></summary><div class="notes-content">
+<ul><li>1 pound = 12 ounces</li><li>1 ounce = 8 drams</li><li>1 dram = 3 scruples</li><li>1 scruple = 20 grains</li><li>1 dram = 60 grains</li><li>1 ounce = 480 grains</li><li>1 pound = 5,760 grains</li></ul>
+<p><b>Approximate metric equivalents:</b></p><ul><li>1 grain ≈ 64.8 mg</li><li>1 scruple ≈ 1.296 g</li><li>1 dram ≈ 3.888 g</li><li>1 apothecaries ounce ≈ 31.1 g</li><li>1 apothecaries pound ≈ 373.2 g</li></ul>
+</div></details>
+<details><summary><b>3. Apothecaries System — Fluid Measure</b></summary><div class="notes-content">
+<ul><li>60 minims = 1 fluid dram</li><li>8 fluid drams = 1 fluid ounce</li><li>16 fluid ounces = 1 pint</li><li>2 pints = 1 quart</li><li>4 quarts = 1 gallon</li><li>1 fluid ounce = 480 minims</li><li>1 pint = 7,680 minims</li></ul>
+<p><b>Approximate metric equivalents:</b></p><ul><li>1 minim ≈ 0.0616 mL</li><li>1 fluid dram ≈ 3.70 mL</li><li>1 fluid ounce ≈ 29.57 mL</li><li>1 pint ≈ 473 mL</li><li>1 quart ≈ 946 mL</li><li>1 gallon ≈ 3.785 L</li></ul>
+</div></details>
+<details><summary><b>4. Avoirdupois System</b></summary><div class="notes-content">
+<ul><li>1 pound = 16 ounces</li><li>1 ounce = 16 drams</li><li>1 pound = 256 drams</li><li>1 stone = 14 pounds</li><li>1 hundredweight = 100 pounds</li><li>1 short ton = 20 hundredweight = 2,000 pounds</li></ul>
+<p><b>Approximate metric equivalents:</b></p><ul><li>1 ounce ≈ 28.35 g</li><li>1 pound ≈ 453.6 g</li><li>1 stone ≈ 6.35 kg</li><li>1 hundredweight ≈ 45.36 kg</li><li>1 short ton ≈ 907.2 kg</li></ul>
+</div></details>
+<details><summary><b>5. Quick Comparison</b></summary><div class="notes-content"><ul>
+<li><b>Apothecaries weight:</b> 12 oz = 1 lb; 8 drams = 1 oz; 3 scruples = 1 dram; 20 grains = 1 scruple.</li>
+<li><b>Avoirdupois weight:</b> 16 oz = 1 lb; 16 drams = 1 oz.</li>
+<li><b>SI/Metric:</b> decimal-based, so prefixes represent powers of 10.</li>
+</ul><p><b>Do not confuse:</b> 1 apothecaries oz ≈ 31.1 g, while 1 avoirdupois oz ≈ 28.35 g. 1 apothecaries lb ≈ 373.2 g, while 1 avoirdupois lb ≈ 453.6 g.</p></div></details>
 </div>
 </section>
 
@@ -277,6 +447,34 @@ const labReview = [{"q": "Which statement best defines matter?", "a": ["Anything
    Hard mode asks for the answer with no choices.
    All 103 questions below are based on the supplied PDF.
    ================================================================ */
+const calculationQuestions = [
+{q:"How many grams are in 1 kilogram?",a:["1 g","10 g","100 g","1000 g"],correct:3,explanation:"1 kg = 1000 g in the SI system."},
+{q:"How many milligrams are in 1 gram?",a:["10 mg","100 mg","1000 mg","10000 mg"],correct:2,explanation:"1 g = 1000 mg."},
+{q:"How many micrograms are in 1 milligram?",a:["10 mcg","100 mcg","1000 mcg","10000 mcg"],correct:2,explanation:"1 mg = 1000 mcg."},
+{q:"How many milliliters are in 1 liter?",a:["10 mL","100 mL","1000 mL","10000 mL"],correct:2,explanation:"1 L = 1000 mL."},
+{q:"How many centimeters are in 1 meter?",a:["10 cm","100 cm","1000 cm","0.1 cm"],correct:1,explanation:"1 m = 100 cm."},
+{q:"How many drams are in 1 apothecaries ounce?",a:["3","8","12","16"],correct:1,explanation:"1 apothecaries ounce = 8 drams."},
+{q:"How many scruples are in 1 apothecaries dram?",a:["2","3","8","20"],correct:1,explanation:"1 dram = 3 scruples."},
+{q:"How many grains are in 1 apothecaries scruple?",a:["3","20","60","480"],correct:1,explanation:"1 scruple = 20 grains."},
+{q:"How many grains are in 1 apothecaries ounce?",a:["60","240","480","5760"],correct:2,explanation:"8 drams × 3 scruples × 20 grains = 480 grains."},
+{q:"How many grains are in 1 apothecaries pound?",a:["480","576","4800","5760"],correct:3,explanation:"12 ounces × 480 grains = 5760 grains."},
+{q:"Approximately how many grams are in 1 apothecaries ounce?",a:["28.35 g","31.1 g","64.8 g","453.6 g"],correct:1,explanation:"1 apothecaries ounce ≈ 31.1 g."},
+{q:"How many minims are in 1 apothecaries fluid dram?",a:["20","30","60","480"],correct:2,explanation:"1 fluid dram = 60 minims."},
+{q:"How many fluid drams are in 1 apothecaries fluid ounce?",a:["4","8","12","16"],correct:1,explanation:"1 fluid ounce = 8 fluid drams."},
+{q:"How many fluid ounces are in 1 apothecaries pint?",a:["8","12","16","32"],correct:2,explanation:"1 pint = 16 fluid ounces."},
+{q:"How many pints are in 1 quart?",a:["1","2","4","8"],correct:1,explanation:"1 quart = 2 pints."},
+{q:"How many quarts are in 1 gallon?",a:["2","4","8","16"],correct:1,explanation:"1 gallon = 4 quarts."},
+{q:"How many ounces are in 1 avoirdupois pound?",a:["8","12","16","20"],correct:2,explanation:"1 avoirdupois pound = 16 ounces."},
+{q:"How many drams are in 1 avoirdupois ounce?",a:["8","12","16","20"],correct:2,explanation:"1 avoirdupois ounce = 16 drams."},
+{q:"How many pounds are in 1 avoirdupois stone?",a:["12","14","16","20"],correct:1,explanation:"1 stone = 14 pounds."},
+{q:"How many pounds are in 1 avoirdupois short ton?",a:["100","500","1000","2000"],correct:3,explanation:"1 short ton = 2000 pounds."},
+{q:"Approximately how many grams are in 1 avoirdupois ounce?",a:["28.35 g","31.1 g","64.8 g","453.6 g"],correct:0,explanation:"1 avoirdupois ounce ≈ 28.35 g."},
+{q:"Approximately how many grams are in 1 avoirdupois pound?",a:["31.1 g","100 g","373.2 g","453.6 g"],correct:3,explanation:"1 avoirdupois pound ≈ 453.6 g."},
+{q:"Which system is primarily based on powers of 10?",a:["Apothecaries","Avoirdupois","SI/Metric","Household"],correct:2,explanation:"SI/Metric conversions use decimal powers of 10."},
+{q:"Which is heavier?",a:["An apothecaries ounce","An avoirdupois ounce","They are exactly equal","Neither"],correct:0,explanation:"An apothecaries ounce is ≈31.1 g, while an avoirdupois ounce is ≈28.35 g."},
+{q:"Which is heavier?",a:["An apothecaries pound","An avoirdupois pound","They are exactly equal","Neither"],correct:1,explanation:"An avoirdupois pound is ≈453.6 g, while an apothecaries pound is ≈373.2 g."}
+];
+
 const botany = [
 
   // ============================================================
@@ -1470,6 +1668,23 @@ function goHome(){show('home')}
 function openSubject(subject){
   if(subject==='inorganic') show('inorganicSubjects');
   else if(subject==='botany') show('botanySubjects');
+  else if(subject==='calculations') show('calculationSubjects');
+}
+function openCalculationNotes(){show('calculationNotes');}
+function startCalculationQuiz(){
+  quizType=5; current=0; score=0; answered=false;
+
+  // Convert calculation questions to the same format used by the multiple-choice quiz UI.
+  questions=shuffle(calculationQuestions).map(x=>({
+    kind:'calculation',
+    q:x.q,
+    answers:shuffle(x.a),
+    correct:x.a[x.correct],
+    explanation:x.explanation
+  }));
+
+  document.getElementById('quizTitle').textContent='🧮 Pharmaceutical Calculations • Conversion Quiz';
+  show('quiz'); render();
 }
 function chooseTopic(t){
   topic=t;
@@ -1768,6 +1983,8 @@ function makeBotanyEasyQuestion(x){ return {kind:'review', q:x.q, answers:shuffl
 function makeBotanyIdentificationQuestion(x){ return {kind:'botanyIdentification', q:x.q, correct:x.a[x.correct], explanation:x.explanation}; }
 function render(){
   answered=false;
+  const oldMeme=document.getElementById('wrongMemeCard');
+  if(oldMeme) oldMeme.remove();
   const q=questions[current];
   document.getElementById('counter').textContent=`${current+1} / ${questions.length}`;
   document.getElementById('progressBar').style.width=`${(current/questions.length)*100}%`;
@@ -1834,6 +2051,142 @@ function identificationAnswersMatch(typed, correct){
   return false;
 }
 
+
+// Mocking laugh sound — generated in the browser, so no extra audio file is needed
+function playMockingLaugh(){
+  try{
+    const Ctx=window.AudioContext||window.webkitAudioContext;
+    if(!Ctx)return;
+    const ctx=new Ctx();
+    const master=ctx.createGain();
+    master.gain.value=0.13;
+    master.connect(ctx.destination);
+    const now=ctx.currentTime;
+    [0,0.20,0.40,0.62].forEach((offset,i)=>{
+      const osc=ctx.createOscillator();
+      const gain=ctx.createGain();
+      osc.type='sawtooth';
+      osc.frequency.setValueAtTime(210-i*10,now+offset);
+      osc.frequency.exponentialRampToValueAtTime(155-i*7,now+offset+0.13);
+      gain.gain.setValueAtTime(0.0001,now+offset);
+      gain.gain.exponentialRampToValueAtTime(0.8,now+offset+0.025);
+      gain.gain.exponentialRampToValueAtTime(0.0001,now+offset+0.15);
+      osc.connect(gain); gain.connect(master);
+      osc.start(now+offset); osc.stop(now+offset+0.17);
+    });
+    setTimeout(()=>ctx.close().catch(()=>{}),1000);
+  }catch(e){}
+}
+
+const memeReactionPhrases = [
+  'YOU DUMB BITCH 💀',
+  'ARE YOU STUPID OR WHAT 😭',
+  'DUMBASS, READ THE QUESTION 💀',
+  'WHAT THE FUCK WAS THAT ANSWER 😭',
+  'BRO IS ACTUALLY DUMB 💀',
+  'USE YOUR FUCKING BRAIN 😭',
+  'YOU REALLY THOUGHT THAT WAS RIGHT 💀',
+  'DUMB BITCH ACTIVITY 😭',
+  'HOW DID YOU EVEN GET THAT ANSWER 💀',
+  'YOUR LAST TWO BRAIN CELLS ARE FIGHTING 😭',
+  'YOU CANNOT BE SERIOUS 💀',
+  'THAT WAS FUCKING TERRIBLE 😭',
+  'WHO LET YOU COOK 💀',
+  'YOUR BRAIN JUST BETRAYED YOU 😭',
+  'THAT ANSWER WAS DUMB AS HELL 💀',
+  'BRO, THINK FOR TWO SECONDS 😭',
+  'YOU HAD ONE FUCKING JOB 💀',
+  'NOT A SINGLE BRAIN CELL SURVIVED 😭',
+  'THAT WAS THE DUMBEST OPTION 💀',
+  'I KNOW YOU DID NOT JUST PICK THAT 😭',
+  'YOUR CONFIDENCE IS INSANE FOR SOMEONE THIS WRONG 💀',
+  'DID YOU EVEN READ THE QUESTION 😭',
+  'THAT ANSWER NEEDS TO BE ARRESTED 💀',
+  'CONGRATULATIONS, YOU PLAYED YOURSELF 😭',
+  'THE FUCKING AUDACITY 💀',
+  'BRO CHOSE VIOLENCE AGAINST THE ANSWER KEY 😭',
+  'THINK, DUMBASS, THINK 💀',
+  'THAT WAS NOT EVEN CLOSE 😭',
+  'YOUR BRAIN CLOCKED OUT 💀',
+  'ABSOLUTELY EMBARRASSING 😭',
+  'YOU REALLY CLICKED THAT WITH CONFIDENCE 💀',
+  'THE ANSWER KEY IS LAUGHING AT YOU 😭',
+  'NAH BRO, YOU ARE COOKED 💀',
+  'THAT ANSWER WAS CRIMINAL 😭',
+  'GO READ THE NOTES AGAIN, DUMBASS 💀',
+  'THE NEURONS HAVE FAILED YOU 😭',
+  'YOU JUST LOST AN ARGUMENT WITH A QUIZ 💀',
+  'PLEASE USE THE BRAIN YOU WERE GIVEN 😭',
+  'THAT WAS PAINFUL AS FUCK 💀',
+  'BRO IS FIGHTING FOR HIS LIFE AGAINST BASIC QUESTIONS 😭',
+  'WRONG. SO FUCKING WRONG. 💀',
+  'YOU GOT BULLIED BY A MULTIPLE CHOICE QUESTION 😭',
+  'EVEN THE WRONG ANSWER IS EMBARRASSED 💀',
+  'THAT WAS A TERRIBLE FUCKING GUESS 😭',
+  'YOUR BRAIN SAID “FUCK IT” 💀',
+  'YOU ARE NOT BEATING THE DUMB ALLEGATIONS 😭',
+  'THE CORRECT ANSWER WAS RIGHT THERE, DUMBASS 💀',
+  'I EXPECTED BETTER. ACTUALLY, I DIDN’T 😭',
+  'BRO PLEASE, THIS IS PAINFUL 💀',
+  'YOU JUST GOT DESTROYED BY A QUESTION 😭'
+];
+
+const memeBaseNames = Array.from({length:12}, (_,i) => `meme${i+1}`);
+
+function showRandomWrongMeme(){
+  const old=document.getElementById('wrongMemeCard');
+  if(old) old.remove();
+
+  const card=document.createElement('div');
+  card.id='wrongMemeCard';
+  card.className='meme-reaction-card';
+
+  const close=document.createElement('button');
+  close.className='meme-close';
+  close.type='button';
+  close.textContent='×';
+  close.title='Close meme';
+  close.onclick=()=>card.remove();
+  card.appendChild(close);
+
+  const phrase=document.createElement('div');
+  phrase.className='meme-phrase';
+  phrase.textContent=memeReactionPhrases[Math.floor(Math.random()*memeReactionPhrases.length)];
+
+  const img=document.createElement('img');
+  img.alt='Random reaction meme';
+  img.dataset.index='0';
+  img.dataset.baseIndex=String(Math.floor(Math.random()*memeBaseNames.length));
+
+  const tryImage=()=>{
+    const baseIndex=Number(img.dataset.baseIndex);
+    const extIndex=Number(img.dataset.index);
+    const exts=['jpg','jpeg','png','gif','webp'];
+    if(baseIndex >= memeBaseNames.length){
+      img.style.display='none';
+      return;
+    }
+    if(extIndex >= exts.length){
+      img.dataset.baseIndex=String((baseIndex+1)%memeBaseNames.length);
+      img.dataset.index='0';
+      // If every configured filename is missing, the card still shows the reaction phrase.
+      if(Number(img.dataset.baseIndex)===0){ img.style.display='none'; return; }
+      tryImage();
+      return;
+    }
+    img.src=`meme/${memeBaseNames[baseIndex]}.${exts[extIndex]}`;
+    img.dataset.index=String(extIndex+1);
+  };
+  img.onerror=tryImage;
+  card.appendChild(phrase);
+  card.appendChild(img);
+
+  const feedback=document.getElementById('feedback');
+  if(feedback && feedback.parentNode) feedback.parentNode.insertBefore(card, feedback.nextSibling);
+  tryImage();
+  playMockingLaugh();
+}
+
 function submitIdentification(q){
   if(answered)return;
   const input=document.getElementById('identificationInput');
@@ -1856,6 +2209,7 @@ function submitIdentification(q){
     input.style.borderColor='#d64b4b';
     input.style.background='#fff0f0';
     document.getElementById('feedback').textContent='✗ Not quite!';
+    showRandomWrongMeme();
   }
 
   showAnswerExplanation(q, val, correct);
@@ -1876,6 +2230,7 @@ function answer(btn,val,q){
     btn.classList.add('wrong');
     document.querySelectorAll('.answer').forEach(b=>{if(b.textContent===q.correct)b.classList.add('correct')});
     document.getElementById('feedback').textContent='✗ Not quite!';
+    showRandomWrongMeme();
   }
 
   showAnswerExplanation(q, val, correct);
@@ -1885,6 +2240,8 @@ function answer(btn,val,q){
 }
 
 function nextQuestion(){
+  const meme=document.getElementById('wrongMemeCard');
+  if(meme) meme.remove();
   current++;
   if(current>=questions.length) finish();
   else render();
@@ -1898,7 +2255,7 @@ function finish(){
   show('result');
 }
 
-function restart(){if(quizType===3||quizType===4)startIdentification(identificationLevel);else startQuiz(quizType)}
+function restart(){if(quizType===3||quizType===4)startIdentification(identificationLevel);else if(quizType===5)startCalculationQuiz();else startQuiz(quizType)}
 
 function showWhyWrongExplanation(question, selectedAnswer, correctAnswer) {
   const existing = document.getElementById('whyWrongExplanation');
