@@ -2143,7 +2143,19 @@ const memeReactionPhrases = [
   'YOU JUST GOT DESTROYED BY A QUESTION 😭'
 ];
 
-const memeBaseNames = Array.from({length:12}, (_,i) => `meme${i+1}`);
+const memeBaseNames = Array.from({length:17}, (_,i) => `meme${i+1}`);
+const memeRecentHistory = [];
+const memeRepeatCooldown = 7;
+
+function pickMemeBaseIndex(){
+  const blocked=new Set(memeRecentHistory.slice(-memeRepeatCooldown));
+  const available=memeBaseNames.map((_,i)=>i).filter(i=>!blocked.has(i));
+  const pool=available.length ? available : memeBaseNames.map((_,i)=>i);
+  const picked=pool[Math.floor(Math.random()*pool.length)];
+  memeRecentHistory.push(picked);
+  if(memeRecentHistory.length > memeRepeatCooldown*2) memeRecentHistory.splice(0, memeRecentHistory.length-(memeRepeatCooldown*2));
+  return picked;
+}
 
 function showRandomWrongMeme(){
   const old=document.getElementById('wrongMemeCard');
@@ -2168,7 +2180,7 @@ function showRandomWrongMeme(){
   const img=document.createElement('img');
   img.alt='Random reaction meme';
   img.dataset.index='0';
-  img.dataset.baseIndex=String(Math.floor(Math.random()*memeBaseNames.length));
+  img.dataset.baseIndex=String(pickMemeBaseIndex());
 
   const tryImage=()=>{
     const baseIndex=Number(img.dataset.baseIndex);
